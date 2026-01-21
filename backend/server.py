@@ -279,10 +279,15 @@ async def create_table(table: TableCreate, current_user: User = Depends(get_curr
     if current_user.role not in ["inventory_manager", "cashier"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
-    qr_data = f"table-{table.table_number}-{table.id}"
+    qr_data = f"table-{table.table_number}-{str(uuid.uuid4())[:8]}"
     qr_image = generate_qr_code(qr_data)
-    table.qr_code = qr_data
-    table.qr_image = qr_image
+    
+    table_obj = Table(
+        table_number=table.table_number,
+        capacity=table.capacity,
+        qr_code=qr_data,
+        qr_image=qr_image
+    )
     
     table_dict = table.model_dump()
     await db.tables.insert_one(table_dict)
