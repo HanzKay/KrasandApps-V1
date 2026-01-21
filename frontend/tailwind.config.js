@@ -10,15 +10,15 @@ module.exports = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: '#2C4A3B',
-          foreground: '#F5F1E8',
+          DEFAULT: '#5A3A2A',
+          foreground: '#FFFFFF',
         },
         secondary: {
-          DEFAULT: '#E6DCCA',
-          foreground: '#2C4A3B',
+          DEFAULT: '#F5EEDC',
+          foreground: '#5A3A2A',
         },
         accent: {
-          DEFAULT: '#C87941',
+          DEFAULT: '#FF7F50',
           foreground: '#FFFFFF',
         },
         destructive: {
