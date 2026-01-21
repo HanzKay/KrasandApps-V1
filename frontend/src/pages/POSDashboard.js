@@ -63,7 +63,7 @@ const POSDashboard = () => {
           </style>
         </head>
         <body>
-          <h2>CaféFlow Receipt</h2>
+          <h2>Kopi Krasand Receipt</h2>
           <p><strong>Order #:</strong> ${order.order_number}</p>
           <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
           <p><strong>Customer:</strong> ${order.customer_name || 'Guest'}</p>
