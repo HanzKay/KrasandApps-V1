@@ -127,7 +127,7 @@ const InventoryDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F7F2]">
+    <div className="min-h-screen bg-[#F5EEDC]">
       <header className="bg-white border-b border-secondary p-4 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
