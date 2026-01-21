@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
@@ -23,7 +24,22 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-app = FastAPI()
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    logger.info("Starting Coffee Shop Management API")
+    yield
+    # Shutdown
+    client.close()
+    logger.info("Database connection closed")
+
+app = FastAPI(lifespan=lifespan)
 api_router = APIRouter(prefix="/api")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
