@@ -218,10 +218,11 @@ const CustomerApp = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Coffee className="w-8 h-8 text-primary" />
-              <h1 className="text-2xl sm:text-3xl font-playfair font-bold text-primary">
-                CaféFlow
-              </h1>
+              <img 
+                src="https://customer-assets.emergentagent.com/job_eatease-19/artifacts/ks9z3yrd_KopiKrasand.png" 
+                alt="Kopi Krasand"
+                className="logo-kopi"
+              />
             </div>
             <div className="flex items-center gap-2">
               {user ? (
