@@ -131,29 +131,29 @@ const POSDashboard = () => {
         <div className="mb-6">
           <div className="flex gap-4 items-center mb-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#E6DCCA]" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#F5EEDC]" />
               <Input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 data-testid="pos-search-input"
                 placeholder="Search by order number or customer name..."
-                className="pl-10 bg-[#2C4A3B] border-[#3d5a4a] text-white placeholder:text-[#E6DCCA]/60"
+                className="pl-10 bg-[#5A3A2A] border-[#6b4a3a] text-white placeholder:text-[#F5EEDC]/60"
               />
             </div>
           </div>
           <div className="flex gap-4 text-sm">
-            <div className="bg-[#2C4A3B] px-4 py-2 rounded">
-              <span className="text-[#E6DCCA]/60">Total Orders: </span>
-              <span className="font-semibold text-[#F5F1E8]">{orders.length}</span>
+            <div className="bg-[#5A3A2A] px-4 py-2 rounded">
+              <span className="text-[#F5EEDC]/60">Total Orders: </span>
+              <span className="font-semibold text-white">{orders.length}</span>
             </div>
-            <div className="bg-[#2C4A3B] px-4 py-2 rounded">
-              <span className="text-[#E6DCCA]/60">Unpaid: </span>
+            <div className="bg-[#5A3A2A] px-4 py-2 rounded">
+              <span className="text-[#F5EEDC]/60">Unpaid: </span>
               <span className="font-semibold text-[#D9A54C]">
                 {orders.filter((o) => o.payment_status === 'unpaid').length}
               </span>
             </div>
-            <div className="bg-[#2C4A3B] px-4 py-2 rounded">
-              <span className="text-[#E6DCCA]/60">Paid: </span>
+            <div className="bg-[#5A3A2A] px-4 py-2 rounded">
+              <span className="text-[#F5EEDC]/60">Paid: </span>
               <span className="font-semibold text-[#4A7A5E]">
                 {orders.filter((o) => o.payment_status === 'paid').length}
               </span>
@@ -162,16 +162,16 @@ const POSDashboard = () => {
         </div>
 
         {loading ? (
-          <div className="text-center py-12 text-[#E6DCCA]">Loading orders...</div>
+          <div className="text-center py-12 text-[#F5EEDC]">Loading orders...</div>
         ) : filteredOrders.length === 0 ? (
-          <div className="text-center py-12 text-[#E6DCCA]/60">No orders found</div>
+          <div className="text-center py-12 text-[#F5EEDC]/60">No orders found</div>
         ) : (
           <div className="grid gap-4">
             {filteredOrders.map((order) => (
               <Card
                 key={order.id}
                 data-testid={`pos-order-${order.id}`}
-                className="bg-[#2C4A3B] border border-[#3d5a4a] p-4 text-[#F5F1E8]"
+                className="bg-[#5A3A2A] border border-[#6b4a3a] p-4 text-white"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -192,34 +192,34 @@ const POSDashboard = () => {
                         {order.status}
                       </Badge>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-[#E6DCCA]">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-[#F5EEDC]">
                       <div>
-                        <span className="text-[#E6DCCA]/60">Customer: </span>
+                        <span className="text-[#F5EEDC]/60">Customer: </span>
                         {order.customer_name || 'Guest'}
                       </div>
                       <div>
-                        <span className="text-[#E6DCCA]/60">Type: </span>
+                        <span className="text-[#F5EEDC]/60">Type: </span>
                         {order.order_type}
                       </div>
                       {order.table_number && (
                         <div>
-                          <span className="text-[#E6DCCA]/60">Table: </span>
+                          <span className="text-[#F5EEDC]/60">Table: </span>
                           {order.table_number}
                         </div>
                       )}
                       <div>
-                        <span className="text-[#E6DCCA]/60">Items: </span>
+                        <span className="text-[#F5EEDC]/60">Items: </span>
                         {order.items.length}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <div className="text-2xl font-bold font-mono text-[#C87941]">
+                      <div className="text-2xl font-bold font-mono text-[#FF7F50]">
                         ${order.total_amount.toFixed(2)}
                       </div>
                       {order.payment_method && (
-                        <div className="text-xs text-[#E6DCCA]/60">{order.payment_method}</div>
+                        <div className="text-xs text-[#F5EEDC]/60">{order.payment_method}</div>
                       )}
                     </div>
                     <div className="flex gap-2">
