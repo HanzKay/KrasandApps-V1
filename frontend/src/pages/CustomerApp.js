@@ -158,7 +158,11 @@ const CustomerApp = () => {
       return;
     }
     if (orderType === 'dine-in' && !tableInfo) {
-      toast.error('Please scan table QR code first');
+      toast.error('Please scan your table QR code before checkout', {
+        description: 'Tap "Scan Table QR" button at the top of the page',
+        duration: 5000,
+      });
+      setShowCart(false);
       return;
     }
     setShowCheckout(true);
