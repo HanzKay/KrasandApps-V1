@@ -289,9 +289,9 @@ async def create_table(table: TableCreate, current_user: User = Depends(get_curr
         qr_image=qr_image
     )
     
-    table_dict = table.model_dump()
+    table_dict = table_obj.model_dump()
     await db.tables.insert_one(table_dict)
-    return table
+    return table_obj
 
 @api_router.get("/tables", response_model=List[Table])
 async def get_tables(current_user: User = Depends(get_current_user)):
