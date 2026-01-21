@@ -102,13 +102,17 @@ const POSDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#1A1C1A] text-white">
-      <header className="bg-[#2C4A3B] border-b border-[#3d5a4a] p-4">
+      <header className="bg-[#5A3A2A] border-b border-[#6b4a3a] p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <CreditCard className="w-8 h-8 text-[#F5F1E8]" />
+            <img 
+              src="https://customer-assets.emergentagent.com/job_eatease-19/artifacts/ks9z3yrd_KopiKrasand.png" 
+              alt="Kopi Krasand"
+              className="h-12"
+            />
             <div>
-              <h1 className="text-2xl font-playfair font-bold text-[#F5F1E8]">POS Dashboard</h1>
-              <p className="text-sm text-[#E6DCCA]">{user?.name}</p>
+              <h1 className="text-xl font-playfair font-bold text-white">POS Dashboard</h1>
+              <p className="text-sm text-[#F5EEDC]">{user?.name}</p>
             </div>
           </div>
           <Button
