@@ -52,12 +52,15 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F7F2] flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#F5EEDC] flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Coffee className="w-10 h-10 text-primary" />
-            <h1 className="text-4xl font-playfair font-bold text-primary">CaféFlow</h1>
+          <div className="inline-flex items-center justify-center mb-4">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_eatease-19/artifacts/ks9z3yrd_KopiKrasand.png" 
+              alt="Kopi Krasand"
+              className="h-20"
+            />
           </div>
           <p className="text-muted-foreground">Manage your coffee shop with ease</p>
         </div>
