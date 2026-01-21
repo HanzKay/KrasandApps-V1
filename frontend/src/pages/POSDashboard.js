@@ -257,16 +257,16 @@ const POSDashboard = () => {
 
       {/* Payment Dialog */}
       <Dialog open={showPayment} onOpenChange={setShowPayment}>
-        <DialogContent className="sm:max-w-md bg-[#2C4A3B] text-white" data-testid="payment-dialog">
+        <DialogContent className="sm:max-w-md bg-[#5A3A2A] text-white" data-testid="payment-dialog">
           <DialogHeader>
             <DialogTitle>Process Payment</DialogTitle>
           </DialogHeader>
           {selectedOrder && (
             <div className="space-y-4">
               <div className="bg-[#1A1C1A] p-4 rounded-lg">
-                <p className="text-sm text-[#E6DCCA]/60 mb-1">Order Number</p>
+                <p className="text-sm text-[#F5EEDC]/60 mb-1">Order Number</p>
                 <p className="font-mono font-bold text-lg">{selectedOrder.order_number}</p>
-                <p className="text-3xl font-bold font-mono text-[#C87941] mt-3">
+                <p className="text-3xl font-bold font-mono text-[#FF7F50] mt-3">
                   ${selectedOrder.total_amount.toFixed(2)}
                 </p>
               </div>
@@ -277,7 +277,7 @@ const POSDashboard = () => {
                     variant={paymentMethod === 'cash' ? 'default' : 'outline'}
                     onClick={() => setPaymentMethod('cash')}
                     data-testid="payment-method-cash"
-                    className={paymentMethod === 'cash' ? 'bg-[#C87941]' : 'border-[#E6DCCA]/20'}
+                    className={paymentMethod === 'cash' ? 'bg-[#FF7F50]' : 'border-[#F5EEDC]/20'}
                   >
                     Cash
                   </Button>
@@ -285,7 +285,7 @@ const POSDashboard = () => {
                     variant={paymentMethod === 'qr' ? 'default' : 'outline'}
                     onClick={() => setPaymentMethod('qr')}
                     data-testid="payment-method-qr"
-                    className={paymentMethod === 'qr' ? 'bg-[#C87941]' : 'border-[#E6DCCA]/20'}
+                    className={paymentMethod === 'qr' ? 'bg-[#FF7F50]' : 'border-[#F5EEDC]/20'}
                   >
                     QR Code
                   </Button>
