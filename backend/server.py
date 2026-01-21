@@ -334,7 +334,7 @@ async def create_order(order: OrderCreate):
     await db.orders.insert_one(order_dict)
     
     # Update ingredient stock
-    for item in order.items:
+    for item in order_obj.items:
         product = await db.products.find_one({"id": item.product_id})
         if product and "recipes" in product:
             for recipe in product["recipes"]:
