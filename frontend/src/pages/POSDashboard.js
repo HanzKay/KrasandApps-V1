@@ -230,7 +230,7 @@ const POSDashboard = () => {
                             setShowPayment(true);
                           }}
                           data-testid={`process-payment-${order.id}`}
-                          className="bg-[#C87941] hover:bg-[#b06835] text-white"
+                          className="bg-[#FF7F50] hover:bg-[#FF7F50]/90 text-white"
                         >
                           Process Payment
                         </Button>
@@ -240,7 +240,7 @@ const POSDashboard = () => {
                           onClick={() => printReceipt(order)}
                           data-testid={`print-receipt-${order.id}`}
                           variant="outline"
-                          className="border-[#E6DCCA]/20 text-[#E6DCCA] hover:bg-white/10"
+                          className="border-[#F5EEDC]/20 text-[#F5EEDC] hover:bg-white/10"
                         >
                           <Printer className="w-4 h-4 mr-2" />
                           Print Receipt
