@@ -1,0 +1,157 @@
+{
+  "identity": {
+    "name": "E1: The Anti-AI Designer",
+    "archetype": "Organic & Earthy",
+    "vibe": "Grounded, matte, physical. A digital extension of a cozy, aromatic coffee shop.",
+    "principles": [
+      "Fusion over Imitation: Mix botanical aesthetics with precision tech.",
+      "Emotion First: Every screen should smell like coffee.",
+      "Content is King: Food photography is the hero.",
+      "Zoom In: Macro shots of textures (foam, crust, beans).",
+      "Negative Space: Let the content breathe."
+    ]
+  },
+  "typography": {
+    "headings": {
+      "fontFamily": "Playfair Display, serif",
+      "usage": "Marketing headers, Menu categories, Featured items",
+      "weights": ["400", "600", "700"],
+      "tracking": "tracking-tight"
+    },
+    "body": {
+      "fontFamily": "DM Sans, sans-serif",
+      "usage": "UI elements, POS data, Kitchen tickets, Descriptions",
+      "weights": ["400", "500", "700"],
+      "tracking": "tracking-normal"
+    },
+    "mono": {
+      "fontFamily": "JetBrains Mono, monospace",
+      "usage": "Order IDs, Prices, Timestamps, Receipt details",
+      "weights": ["400"]
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "DEFAULT": "#2C4A3B",
+        "foreground": "#F5F1E8",
+        "description": "Deep Forest Green - The anchor."
+      },
+      "secondary": {
+        "DEFAULT": "#E6DCCA",
+        "foreground": "#2C4A3B",
+        "description": "Warm Sand/Oat Milk - The base."
+      },
+      "accent": {
+        "DEFAULT": "#C87941",
+        "foreground": "#FFFFFF",
+        "description": "Terracotta/Roasted Bean - The spark."
+      },
+      "background": {
+        "light": "#F9F7F2",
+        "dark": "#1A1C1A",
+        "description": "Off-white paper texture vs Deep Charcoal."
+      },
+      "muted": {
+        "DEFAULT": "#F0EBE0",
+        "foreground": "#6B7280"
+      },
+      "destructive": {
+        "DEFAULT": "#D64545",
+        "foreground": "#FFFFFF"
+      },
+      "success": {
+        "DEFAULT": "#4A7A5E",
+        "foreground": "#FFFFFF"
+      },
+      "warning": {
+        "DEFAULT": "#D9A54C",
+        "foreground": "#FFFFFF"
+      }
+    },
+    "gradients": {
+      "subtle": "bg-gradient-to-b from-[#F9F7F2] to-[#E6DCCA]",
+      "overlay": "bg-gradient-to-t from-black/60 to-transparent"
+    }
+  },
+  "spacing": {
+    "scale": "Tailwind default but doubled for marketing sections.",
+    "containerPadding": "p-6 md:p-12",
+    "gridGap": "gap-6 md:gap-8"
+  },
+  "layout_strategies": {
+    "customer_app": {
+      "type": "Mobile-First Vertical Scroll",
+      "navigation": "Bottom Sticky Bar (Home, Menu, Cart, Profile)",
+      "hero": "Full-screen immersive image with gradient overlay",
+      "menu_grid": "Masonry or Asymmetric Grid (Mode A: Tetris)",
+      "card_style": "Rounded-xl, flat with subtle border, no shadow until hover"
+    },
+    "pos_dashboard": {
+      "type": "High Density Grid (Mode B)",
+      "structure": "Sidebar Navigation + Main Content Area + Right Panel (Current Order)",
+      "interaction": "Large touch targets (min 48px), high contrast text",
+      "theme": "Dark Mode preferred for contrast"
+    },
+    "kitchen_display": {
+      "type": "Kanban / Card Grid",
+      "card_structure": "Header (Time/Table) + Body (Items) + Footer (Action)",
+      "status_indicators": "Full-width colored top borders (Yellow=Pending, Blue=Prep, Green=Ready)",
+      "typography": "Large, readable from 3ft distance"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "rounded-full px-8 py-6 text-lg font-medium transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-[#2C4A3B]/20",
+      "secondary": "rounded-full px-6 py-4 border-2 border-[#2C4A3B] text-[#2C4A3B] hover:bg-[#2C4A3B] hover:text-[#F5F1E8]",
+      "ghost": "hover:bg-[#E6DCCA]/50 text-[#2C4A3B]"
+    },
+    "cards": {
+      "menu_item": "group relative overflow-hidden rounded-2xl bg-white border border-[#E6DCCA] hover:border-[#C87941] transition-colors",
+      "order_ticket": "bg-[#1A1C1A] border-l-4 border-l-[status-color] p-4 rounded-r-lg text-[#F5F1E8]"
+    },
+    "inputs": {
+      "style": "bg-transparent border-b-2 border-[#E6DCCA] focus:border-[#2C4A3B] rounded-none px-0 py-2 transition-colors placeholder:text-muted-foreground/50"
+    }
+  },
+  "assets": {
+    "images": {
+      "hero_bg": "https://images.pexels.com/photos/33964550/pexels-photo-33964550.jpeg",
+      "latte_art": "https://images.unsplash.com/photo-1566892972120-e05b15eb16aa?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "pastry": "https://images.pexels.com/photos/6202224/pexels-photo-6202224.jpeg",
+      "barista_action": "https://images.pexels.com/photos/302893/pexels-photo-302893.jpeg",
+      "texture_grain": "url('https://grainy-gradients.vercel.app/noise.svg')"
+    },
+    "icons": {
+      "library": "Lucide React",
+      "style": "Stroke width 1.5px, rounded joins"
+    }
+  },
+  "motion": {
+    "page_transition": "initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: 'easeOut' }}",
+    "hover_lift": "hover:-translate-y-1 transition-transform duration-300",
+    "micro_interactions": "Active scale down (0.98) for buttons"
+  },
+  "accessibility": {
+    "contrast": "Ensure 4.5:1 for text. Use APCA for large text.",
+    "focus_states": "Visible ring-2 ring-offset-2 ring-[#C87941]",
+    "reduced_motion": "Respect user preference"
+  },
+  "instructions_to_main_agent": [
+    "1. UPDATE TAILWIND CONFIG: Add the custom colors (forest, sand, terracotta) to tailwind.config.js.",
+    "2. FONT SETUP: Import 'Playfair Display' and 'DM Sans' from Google Fonts in index.css.",
+    "3. THEME STRATEGY: Use the 'Organic & Earthy' palette. Customer app = Light Mode (Sand/White). POS/Kitchen = Dark Mode (Charcoal/Forest).",
+    "4. COMPONENT OVERRIDES: Customize Shadcn components. Remove default radii, add custom borders. Make buttons pill-shaped.",
+    "5. LAYOUT: Use the 'Tetris' grid for the Menu. Use 'High Density' grid for POS.",
+    "6. IMAGES: Use the provided URLs. Do not use placeholders.",
+    "7. TESTING: Add data-testid to all interactive elements."
+  ],
+  "universal_guidelines": [
+    "Avoid generic 'AI slop' designs.",
+    "Do not use gradients for dark colors.",
+    "Create depth with z-index and shadows.",
+    "No 'transition: all'.",
+    "No center-aligning the App container.",
+    "Use 'sonner' for toasts."
+  ]
+}
