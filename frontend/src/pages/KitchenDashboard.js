@@ -81,23 +81,23 @@ const KitchenDashboard = () => {
 
       <main className="max-w-7xl mx-auto p-6" data-testid="kitchen-dashboard">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-[#E6DCCA] mb-2">Active Orders</h2>
-          <p className="text-sm text-[#E6DCCA]/60">{orders.length} orders in queue</p>
+          <h2 className="text-xl font-semibold text-[#F5EEDC] mb-2">Active Orders</h2>
+          <p className="text-sm text-[#F5EEDC]/60">{orders.length} orders in queue</p>
         </div>
 
         {loading ? (
-          <div className="text-center py-12 text-[#E6DCCA]">Loading orders...</div>
+          <div className="text-center py-12 text-[#F5EEDC]">Loading orders...</div>
         ) : orders.length === 0 ? (
-          <div className="text-center py-12 text-[#E6DCCA]/60">No active orders</div>
+          <div className="text-center py-12 text-[#F5EEDC]/60">No active orders</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {orders.map((order) => (
               <Card
                 key={order.id}
                 data-testid={`kitchen-order-${order.id}`}
-                className={`bg-[#2C4A3B] border-l-4 ${getStatusColor(
+                className={`bg-[#5A3A2A] border-l-4 ${getStatusColor(
                   order.status
-                )} p-4 rounded-lg text-[#F5F1E8]`}
+                )} p-4 rounded-lg text-white`}
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -116,26 +116,26 @@ const KitchenDashboard = () => {
                     </Badge>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-[#E6DCCA]">
+                  <div className="flex items-center gap-2 text-sm text-[#F5EEDC]">
                     <Clock className="w-4 h-4" />
                     <span>{new Date(order.created_at).toLocaleTimeString()}</span>
                   </div>
 
                   {order.order_type === 'dine-in' && order.table_number && (
-                    <div className="text-sm text-[#E6DCCA]">
+                    <div className="text-sm text-[#F5EEDC]">
                       Table: <span className="font-semibold">#{order.table_number}</span>
                     </div>
                   )}
 
                   {order.order_type === 'to-go' && order.customer_location && (
-                    <div className="flex items-center gap-2 text-sm text-[#E6DCCA]">
+                    <div className="flex items-center gap-2 text-sm text-[#F5EEDC]">
                       <MapPin className="w-4 h-4" />
                       <span>Location Shared</span>
                     </div>
                   )}
 
-                  <div className="border-t border-[#3d5a4a] pt-3 mt-3">
-                    <p className="text-sm text-[#E6DCCA] mb-2">Items:</p>
+                  <div className="border-t border-[#6b4a3a] pt-3 mt-3">
+                    <p className="text-sm text-[#F5EEDC] mb-2">Items:</p>
                     <div className="space-y-1">
                       {order.items.map((item, idx) => (
                         <div key={idx} className="text-sm flex justify-between">
