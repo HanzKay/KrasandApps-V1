@@ -312,7 +312,7 @@ async def update_table_status(table_id: str, status: dict, current_user: User = 
 
 # Orders Routes
 @api_router.post("/orders", response_model=Order)
-async def create_order(order: Order):
+async def create_order(order: OrderCreate):
     order.order_number = f"ORD-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}"
     order_dict = order.model_dump()
     order_dict["created_at"] = order_dict["created_at"].isoformat()
