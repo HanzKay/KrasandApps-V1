@@ -280,10 +280,10 @@ const CustomerApp = () => {
         <div className="absolute inset-0 grain-texture"></div>
         <div className="relative z-10 max-w-3xl">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-playfair font-bold text-white mb-4 tracking-tight">
-            Your Daily Dose of Excellence
+            Authentic Indonesian Coffee
           </h2>
           <p className="text-lg sm:text-xl text-white/90 mb-8">
-            Handcrafted beverages and artisan foods, made with love
+            Experience the rich flavors of Kopi Krasand
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button
