@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class CoffeeShopAPITester:
-    def __init__(self, base_url="https://eatease-19.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://barista-app-1.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.tokens = {}  # Store tokens for different roles
         self.users = {}   # Store user data for different roles
