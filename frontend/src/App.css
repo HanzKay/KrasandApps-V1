@@ -1,5 +1,5 @@
 .hero-gradient {
-  background: linear-gradient(to bottom, rgba(249, 247, 242, 0.1), rgba(44, 74, 59, 0.8)),
+  background: linear-gradient(to bottom, rgba(90, 58, 42, 0.5), rgba(90, 58, 42, 0.95)),
     url('https://images.pexels.com/photos/33964550/pexels-photo-33964550.jpeg');
   background-size: cover;
   background-position: center;
@@ -36,4 +36,9 @@ button:active {
 
 .hover-lift:hover {
   transform: translateY(-4px);
+}
+
+.logo-kopi {
+  max-height: 60px;
+  height: auto;
 }
