@@ -102,6 +102,18 @@ class OrderItem(BaseModel):
     quantity: int
     price: float
 
+class OrderCreate(BaseModel):
+    customer_id: Optional[str] = None
+    customer_name: Optional[str] = None
+    customer_email: Optional[str] = None
+    order_type: Literal["dine-in", "delivery", "to-go"]
+    table_id: Optional[str] = None
+    table_number: Optional[int] = None
+    items: List[OrderItem]
+    total_amount: float
+    customer_location: Optional[dict] = None
+    notes: Optional[str] = None
+
 class Order(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
