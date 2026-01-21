@@ -1,34 +1,39 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+.hero-gradient {
+  background: linear-gradient(to bottom, rgba(249, 247, 242, 0.1), rgba(44, 74, 59, 0.8)),
+    url('https://images.pexels.com/photos/33964550/pexels-photo-33964550.jpeg');
+  background-size: cover;
+  background-position: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+.order-card-pending {
+  border-left-color: #D9A54C;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.order-card-preparing {
+  border-left-color: #3B82F6;
 }
 
-.App-link {
-    color: #61dafb;
+.order-card-ready {
+  border-left-color: #4A7A5E;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.grain-texture {
+  background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.03;
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
 }
