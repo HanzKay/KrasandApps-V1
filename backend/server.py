@@ -343,7 +343,7 @@ async def create_order(order: OrderCreate):
                     {"$inc": {"current_stock": -recipe["quantity"] * item.quantity}}
                 )
     
-    return order
+    return order_obj
 
 @api_router.get("/orders", response_model=List[Order])
 async def get_orders(
