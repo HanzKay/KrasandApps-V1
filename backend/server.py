@@ -275,7 +275,7 @@ async def update_product(product_id: str, product: Product, current_user: User =
 
 # Tables Routes
 @api_router.post("/tables", response_model=Table)
-async def create_table(table: Table, current_user: User = Depends(get_current_user)):
+async def create_table(table: TableCreate, current_user: User = Depends(get_current_user)):
     if current_user.role not in ["inventory_manager", "cashier"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
