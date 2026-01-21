@@ -301,14 +301,14 @@ const CustomerApp = () => {
       </section>
 
       {/* Order Type Selection */}
-      <section className="bg-white py-8 border-b border-secondary">
+      <section className="bg-white py-8 border-b border-secondary relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-4 justify-center">
             <Button
               variant={orderType === 'dine-in' ? 'default' : 'outline'}
               onClick={() => setOrderType('dine-in')}
               data-testid="order-type-dine-in"
-              className="rounded-full px-6 py-4"
+              className="rounded-full px-6 py-4 relative z-10"
             >
               <UtensilsCrossed className="w-4 h-4 mr-2" />
               Dine-In
@@ -317,7 +317,7 @@ const CustomerApp = () => {
               variant={orderType === 'delivery' ? 'default' : 'outline'}
               onClick={() => setOrderType('delivery')}
               data-testid="order-type-delivery"
-              className="rounded-full px-6 py-4"
+              className="rounded-full px-6 py-4 relative z-10"
             >
               <Truck className="w-4 h-4 mr-2" />
               Delivery
@@ -329,7 +329,7 @@ const CustomerApp = () => {
                 requestLocation();
               }}
               data-testid="order-type-to-go"
-              className="rounded-full px-6 py-4"
+              className="rounded-full px-6 py-4 relative z-10"
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
               To-Go / Pickup
