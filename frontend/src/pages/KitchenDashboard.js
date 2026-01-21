@@ -148,7 +148,7 @@ const KitchenDashboard = () => {
                   </div>
 
                   {order.notes && (
-                    <div className="bg-[#1A1C1A] p-2 rounded text-sm text-[#E6DCCA]">
+                    <div className="bg-[#1A1C1A] p-2 rounded text-sm text-[#F5EEDC]">
                       Note: {order.notes}
                     </div>
                   )}
