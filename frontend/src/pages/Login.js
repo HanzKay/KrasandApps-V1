@@ -6,13 +6,13 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Coffee, LogIn } from 'lucide-react';
+import { LogIn, UserPlus, Crown } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [role, setRole] = useState('customer');
+  const [isMember, setIsMember] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login, register } = useAuth();
   const navigate = useNavigate();
@@ -46,9 +46,10 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const user = await register(email, password, name, role);
-      toast.success('Account created successfully!');
-      navigate(redirectByRole(user.role));
+      // Customer registration only - no role parameter
+      const user = await register(email, password, name, isMember);
+      toast.success(isMember ? 'Welcome to Kopi Krasand! You are now a member.' : 'Account created successfully!');
+      navigate('/');
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Registration failed');
     } finally {
@@ -67,14 +68,14 @@ const Login = () => {
               className="h-20"
             />
           </div>
-          <p className="text-muted-foreground">Manage your coffee shop with ease</p>
+          <p className="text-muted-foreground">Welcome to Kopi Krasand</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg border border-secondary p-8">
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="login" data-testid="login-tab">Login</TabsTrigger>
-              <TabsTrigger value="register" data-testid="register-tab">Register</TabsTrigger>
+              <TabsTrigger value="register" data-testid="register-tab">Join Us</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
@@ -88,6 +89,7 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    placeholder="your@email.com"
                     className="mt-1"
                   />
                 </div>
@@ -100,25 +102,29 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    placeholder="••••••••"
                     className="mt-1"
                   />
                 </div>
                 <Button
                   type="submit"
                   data-testid="login-submit-button"
-                  className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground py-6"
+                  className="w-full rounded-full bg-[#5A3A2A] hover:bg-[#4a2a1a] text-white py-6"
                   disabled={loading}
                 >
                   <LogIn className="w-4 h-4 mr-2" />
                   {loading ? 'Logging in...' : 'Login'}
                 </Button>
               </form>
+              <p className="text-xs text-center text-muted-foreground mt-4">
+                Staff members: Please contact admin for account access
+              </p>
             </TabsContent>
 
             <TabsContent value="register">
               <form onSubmit={handleRegister} className="space-y-4">
                 <div>
-                  <Label htmlFor="reg-name">Name</Label>
+                  <Label htmlFor="reg-name">Your Name</Label>
                   <Input
                     id="reg-name"
                     type="text"
@@ -126,6 +132,7 @@ const Login = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    placeholder="John Doe"
                     className="mt-1"
                   />
                 </div>
@@ -138,6 +145,7 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    placeholder="your@email.com"
                     className="mt-1"
                   />
                 </div>
@@ -150,33 +158,41 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    placeholder="••••••••"
                     className="mt-1"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="role">Role</Label>
-                  <select
-                    id="role"
-                    data-testid="register-role-select"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-transparent"
-                  >
-                    <option value="customer">Customer</option>
-                    <option value="cashier">Cashier</option>
-                    <option value="waiter">Waiter</option>
-                    <option value="kitchen">Kitchen Staff</option>
-                    <option value="storage">Storage Staff</option>
-                    <option value="admin">Admin</option>
-                  </select>
+                
+                {/* Membership Option */}
+                <div className="bg-[#F5EEDC] rounded-lg p-4 border border-[#D9A54C]">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isMember}
+                      onChange={(e) => setIsMember(e.target.checked)}
+                      data-testid="register-member-checkbox"
+                      className="mt-1 w-4 h-4 accent-[#D9A54C]"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Crown className="w-4 h-4 text-[#D9A54C]" />
+                        <span className="font-semibold text-[#5A3A2A]">Join as Member</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Get exclusive discounts, earn points, and receive special offers!
+                      </p>
+                    </div>
+                  </label>
                 </div>
+
                 <Button
                   type="submit"
                   data-testid="register-submit-button"
-                  className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground py-6"
+                  className="w-full rounded-full bg-[#5A3A2A] hover:bg-[#4a2a1a] text-white py-6"
                   disabled={loading}
                 >
-                  {loading ? 'Creating account...' : 'Create Account'}
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  {loading ? 'Creating account...' : (isMember ? 'Join as Member' : 'Create Account')}
                 </Button>
               </form>
             </TabsContent>
@@ -188,9 +204,9 @@ const Login = () => {
             variant="ghost"
             onClick={() => navigate('/')}
             data-testid="back-to-home-button"
-            className="text-primary hover:text-primary/80"
+            className="text-[#5A3A2A] hover:text-[#4a2a1a]"
           >
-            Back to Home
+            Back to Menu
           </Button>
         </div>
       </div>
