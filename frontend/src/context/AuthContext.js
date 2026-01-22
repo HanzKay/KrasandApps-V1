@@ -46,12 +46,13 @@ export const AuthProvider = ({ children }) => {
     return userData;
   };
 
-  const register = async (email, password, name, role = 'customer') => {
+  const register = async (email, password, name, isMember = false) => {
+    // Customer-only registration (no role parameter - backend enforces customer role)
     const response = await axios.post(`${API_URL}/auth/register`, {
       email,
       password,
       name,
-      role,
+      is_member: isMember,
     });
     const { access_token, user: userData } = response.data;
     localStorage.setItem('token', access_token);
