@@ -19,6 +19,7 @@ const Login = () => {
 
   const redirectByRole = (userRole) => {
     switch (userRole) {
+      case 'admin': return '/admin';
       case 'kitchen': return '/kitchen';
       case 'cashier': return '/pos';
       case 'waiter': return '/waiter';
