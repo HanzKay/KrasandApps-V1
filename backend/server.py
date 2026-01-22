@@ -51,7 +51,16 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
 
 # Pydantic Models
+# Pydantic Models for Registration
+class CustomerRegister(BaseModel):
+    """Public registration - customers only"""
+    email: EmailStr
+    password: str
+    name: str
+    is_member: bool = False  # Option to join as member
+
 class UserRegister(BaseModel):
+    """Admin-only user creation - all roles"""
     email: EmailStr
     password: str
     name: str
