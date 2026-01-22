@@ -55,7 +55,7 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str
     name: str
-    role: Literal["customer", "kitchen", "cashier", "waiter", "storage"] = "customer"
+    role: Literal["customer", "kitchen", "cashier", "waiter", "storage", "admin"] = "customer"
 
 class UserLogin(BaseModel):
     email: EmailStr
