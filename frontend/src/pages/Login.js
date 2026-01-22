@@ -17,16 +17,23 @@ const Login = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
+  const redirectByRole = (userRole) => {
+    switch (userRole) {
+      case 'kitchen': return '/kitchen';
+      case 'cashier': return '/pos';
+      case 'waiter': return '/waiter';
+      case 'storage': return '/storage';
+      default: return '/';
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const user = await login(email, password);
       toast.success('Welcome back!');
-      if (user.role === 'kitchen') navigate('/kitchen');
-      else if (user.role === 'cashier') navigate('/pos');
-      else if (user.role === 'inventory_manager') navigate('/inventory');
-      else navigate('/');
+      navigate(redirectByRole(user.role));
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Login failed');
     } finally {
@@ -40,10 +47,7 @@ const Login = () => {
     try {
       const user = await register(email, password, name, role);
       toast.success('Account created successfully!');
-      if (user.role === 'kitchen') navigate('/kitchen');
-      else if (user.role === 'cashier') navigate('/pos');
-      else if (user.role === 'inventory_manager') navigate('/inventory');
-      else navigate('/');
+      navigate(redirectByRole(user.role));
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Registration failed');
     } finally {
@@ -158,9 +162,10 @@ const Login = () => {
                     className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-transparent"
                   >
                     <option value="customer">Customer</option>
-                    <option value="kitchen">Kitchen Staff</option>
                     <option value="cashier">Cashier</option>
-                    <option value="inventory_manager">Inventory Manager</option>
+                    <option value="waiter">Waiter</option>
+                    <option value="kitchen">Kitchen Staff</option>
+                    <option value="storage">Storage Staff</option>
                   </select>
                 </div>
                 <Button
