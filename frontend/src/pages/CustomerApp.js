@@ -24,6 +24,8 @@ import {
   Minus,
   User,
   LogOut,
+  Crown,
+  Tag,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import QRScanner from '../components/QRScanner';
@@ -45,6 +47,8 @@ const CustomerApp = () => {
   const [category, setCategory] = useState('all');
   const [myOrders, setMyOrders] = useState([]);
   const [showOrders, setShowOrders] = useState(false);
+  const [discountPreview, setDiscountPreview] = useState(null);
+  const [membership, setMembership] = useState(null);
   const [searchParams] = useSearchParams();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -60,8 +64,18 @@ const CustomerApp = () => {
   useEffect(() => {
     if (user) {
       fetchMyOrders();
+      fetchMembership();
     }
   }, [user]);
+
+  // Fetch discount preview when cart changes and user is logged in
+  useEffect(() => {
+    if (user && cart.length > 0) {
+      fetchDiscountPreview();
+    } else {
+      setDiscountPreview(null);
+    }
+  }, [cart, user]);
 
   const fetchProducts = async () => {
     try {
@@ -81,6 +95,32 @@ const CustomerApp = () => {
       setMyOrders(response.data);
     } catch (error) {
       console.error('Failed to load orders:', error);
+    }
+  };
+
+  const fetchMembership = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_URL}/my/membership`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data && response.data.length > 0) {
+        setMembership(response.data[0]);
+      }
+    } catch (error) {
+      console.error('Failed to load membership:', error);
+    }
+  };
+
+  const fetchDiscountPreview = async () => {
+    try {
+      const response = await axios.post(`${API_URL}/orders/preview-discount`, {
+        customer_id: user.id,
+        items: cart,
+      });
+      setDiscountPreview(response.data);
+    } catch (error) {
+      console.error('Failed to preview discount:', error);
     }
   };
 
@@ -113,6 +153,7 @@ const CustomerApp = () => {
           product_name: product.name,
           quantity: 1,
           price: product.price,
+          category: product.category,
         },
       ]);
     }
