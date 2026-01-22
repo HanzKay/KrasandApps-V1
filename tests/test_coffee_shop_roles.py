@@ -10,12 +10,12 @@ from datetime import datetime
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://barista-app-1.preview.emergentagent.com')
 API_URL = f"{BASE_URL}/api"
 
-# Test credentials for each role
+# Test credentials for each role (password is TestPass123! from previous test runs)
 TEST_CREDENTIALS = {
-    "cashier": {"email": "cashier@test.com", "password": "test123"},
-    "waiter": {"email": "waiter@test.com", "password": "test123"},
-    "kitchen": {"email": "kitchen@test.com", "password": "test123"},
-    "storage": {"email": "storage@test.com", "password": "test123"},
+    "cashier": {"email": "cashier@test.com", "password": "TestPass123!"},
+    "waiter": {"email": "waiter@test.com", "password": "TestPass123!"},
+    "kitchen": {"email": "kitchen@test.com", "password": "TestPass123!"},
+    "storage": {"email": "storage@test.com", "password": "TestPass123!"},
 }
 
 class TestUserRegistrationAndLogin:
