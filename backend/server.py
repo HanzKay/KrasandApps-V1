@@ -399,6 +399,96 @@ async def update_table_status(table_id: str, status: dict, current_user: User = 
 @api_router.post("/orders", response_model=Order)
 async def create_order(order: OrderCreate):
     order_number = f"ORD-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}"
+    
+    # Calculate subtotal and get product categories
+    subtotal = 0
+    food_total = 0
+    beverage_total = 0
+    items_with_category = []
+    
+    # Get all products to determine categories
+    product_ids = [item.product_id for item in order.items]
+    products = await db.products.find({"id": {"$in": product_ids}}).to_list(None)
+    product_map = {p["id"]: p for p in products}
+    
+    for item in order.items:
+        product = product_map.get(item.product_id)
+        item_total = item.price * item.quantity
+        subtotal += item_total
+        
+        category = product.get("category", "food") if product else "food"
+        if category == "food":
+            food_total += item_total
+        else:
+            beverage_total += item_total
+        
+        items_with_category.append(OrderItem(
+            product_id=item.product_id,
+            product_name=item.product_name,
+            quantity=item.quantity,
+            price=item.price,
+            category=category
+        ))
+    
+    # Check for customer membership and calculate discounts
+    discount_info = None
+    total_discount = 0
+    food_discount_amount = 0
+    beverage_discount_amount = 0
+    
+    if order.customer_id:
+        # Find active membership for this customer
+        membership = await db.customer_memberships.find_one({
+            "customer_id": order.customer_id,
+            "status": "active"
+        })
+        
+        if membership:
+            # Check if membership has expired
+            end_date = membership.get("end_date")
+            if end_date:
+                if isinstance(end_date, str):
+                    end_date = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+                if end_date < datetime.now(timezone.utc):
+                    # Membership expired, update status
+                    await db.customer_memberships.update_one(
+                        {"id": membership["id"]},
+                        {"$set": {"status": "expired"}}
+                    )
+                    membership = None
+        
+        if membership:
+            benefits = membership.get("benefits", [])
+            food_discount_percent = 0
+            beverage_discount_percent = 0
+            
+            for benefit in benefits:
+                benefit_type = benefit.get("benefit_type")
+                value = benefit.get("value", 0)
+                
+                if benefit_type == "food_discount":
+                    food_discount_percent = max(food_discount_percent, value)
+                elif benefit_type == "beverage_discount":
+                    beverage_discount_percent = max(beverage_discount_percent, value)
+            
+            # Calculate discount amounts
+            food_discount_amount = round(food_total * (food_discount_percent / 100), 2)
+            beverage_discount_amount = round(beverage_total * (beverage_discount_percent / 100), 2)
+            total_discount = food_discount_amount + beverage_discount_amount
+            
+            if total_discount > 0:
+                discount_info = DiscountInfo(
+                    membership_id=membership["id"],
+                    program_name=membership.get("program_name", "Member"),
+                    food_discount_percent=food_discount_percent,
+                    beverage_discount_percent=beverage_discount_percent,
+                    food_discount_amount=food_discount_amount,
+                    beverage_discount_amount=beverage_discount_amount,
+                    total_discount=total_discount
+                )
+    
+    final_amount = round(subtotal - total_discount, 2)
+    
     order_obj = Order(
         order_number=order_number,
         customer_id=order.customer_id,
@@ -407,22 +497,23 @@ async def create_order(order: OrderCreate):
         order_type=order.order_type,
         table_id=order.table_id,
         table_number=order.table_number,
-        items=order.items,
-        total_amount=order.total_amount,
+        items=items_with_category,
+        subtotal=subtotal,
+        discount_info=discount_info,
+        total_amount=final_amount,
         customer_location=order.customer_location,
         notes=order.notes
     )
+    
     order_dict = order_obj.model_dump()
     order_dict["created_at"] = order_dict["created_at"].isoformat()
     order_dict["updated_at"] = order_dict["updated_at"].isoformat()
+    if order_dict.get("discount_info"):
+        order_dict["discount_info"] = order_dict["discount_info"]
     
     await db.orders.insert_one(order_dict)
     
-    # Update ingredient stock - Batch optimized (fixes N+1 query)
-    product_ids = [item.product_id for item in order_obj.items]
-    products = await db.products.find({"id": {"$in": product_ids}}).to_list(None)
-    product_map = {p["id"]: p for p in products}
-    
+    # Update ingredient stock - Batch optimized
     bulk_ops = []
     for item in order_obj.items:
         product = product_map.get(item.product_id)
