@@ -169,6 +169,7 @@ class OrderItem(BaseModel):
     product_name: str
     quantity: int
     price: float
+    category: Optional[Literal["beverage", "food"]] = None  # For discount calculation
 
 class OrderCreate(BaseModel):
     customer_id: Optional[str] = None
@@ -182,6 +183,16 @@ class OrderCreate(BaseModel):
     customer_location: Optional[dict] = None
     notes: Optional[str] = None
 
+class DiscountInfo(BaseModel):
+    """Discount breakdown for an order"""
+    membership_id: Optional[str] = None
+    program_name: Optional[str] = None
+    food_discount_percent: float = 0
+    beverage_discount_percent: float = 0
+    food_discount_amount: float = 0
+    beverage_discount_amount: float = 0
+    total_discount: float = 0
+
 class Order(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -193,7 +204,9 @@ class Order(BaseModel):
     table_id: Optional[str] = None
     table_number: Optional[int] = None
     items: List[OrderItem]
-    total_amount: float
+    subtotal: float = 0  # Original total before discount
+    discount_info: Optional[DiscountInfo] = None  # Discount breakdown
+    total_amount: float  # Final amount after discount
     status: Literal["pending", "preparing", "ready", "completed", "cancelled"] = "pending"
     payment_status: Literal["unpaid", "paid"] = "unpaid"
     payment_method: Optional[Literal["cash", "online", "qr"]] = None
