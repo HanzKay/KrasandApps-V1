@@ -230,7 +230,16 @@ const CustomerApp = () => {
       };
 
       const response = await axios.post(`${API_URL}/orders`, orderData);
-      toast.success(`Order placed! Order #${response.data.order_number}`);
+      
+      // Show discount applied message if applicable
+      if (response.data.discount_info && response.data.discount_info.total_discount > 0) {
+        toast.success(
+          `Order placed! You saved $${response.data.discount_info.total_discount.toFixed(2)} with your ${response.data.discount_info.program_name} membership!`,
+          { duration: 5000 }
+        );
+      } else {
+        toast.success(`Order placed! Order #${response.data.order_number}`);
+      }
       
       // Update location for to-go orders
       if (orderType === 'to-go' && location) {
@@ -240,6 +249,7 @@ const CustomerApp = () => {
       setCart([]);
       setShowCheckout(false);
       setShowCart(false);
+      setDiscountPreview(null);
       if (user) {
         fetchMyOrders();
       }
