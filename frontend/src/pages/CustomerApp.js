@@ -555,13 +555,66 @@ const CustomerApp = () => {
                     </div>
                   </div>
                 ))}
-                <div className="border-t pt-4">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-lg font-semibold">Total:</span>
-                    <span className="text-2xl font-bold font-mono text-accent" data-testid="cart-total">
-                      ${getTotalAmount().toFixed(2)}
-                    </span>
+                
+                <div className="border-t pt-4 space-y-3">
+                  {/* Discount Preview */}
+                  {discountPreview && discountPreview.discount_info && (
+                    <div className="bg-[#4A7A5E]/10 border border-[#4A7A5E] rounded-lg p-3" data-testid="discount-preview">
+                      <div className="flex items-center gap-2 text-[#4A7A5E] font-semibold mb-2">
+                        <Tag className="w-4 h-4" />
+                        <span>{discountPreview.discount_info.program_name} Discount Applied!</span>
+                      </div>
+                      <div className="text-sm space-y-1 text-muted-foreground">
+                        {discountPreview.discount_info.food_discount_amount > 0 && (
+                          <div className="flex justify-between">
+                            <span>Food ({discountPreview.discount_info.food_discount_percent}% off)</span>
+                            <span className="text-[#4A7A5E]">-${discountPreview.discount_info.food_discount_amount.toFixed(2)}</span>
+                          </div>
+                        )}
+                        {discountPreview.discount_info.beverage_discount_amount > 0 && (
+                          <div className="flex justify-between">
+                            <span>Beverages ({discountPreview.discount_info.beverage_discount_percent}% off)</span>
+                            <span className="text-[#4A7A5E]">-${discountPreview.discount_info.beverage_discount_amount.toFixed(2)}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Pricing Summary */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center text-muted-foreground">
+                      <span>Subtotal:</span>
+                      <span className="font-mono">${getTotalAmount().toFixed(2)}</span>
+                    </div>
+                    
+                    {discountPreview && discountPreview.total_discount > 0 && (
+                      <div className="flex justify-between items-center text-[#4A7A5E]">
+                        <span>Discount:</span>
+                        <span className="font-mono font-semibold" data-testid="discount-amount">
+                          -${discountPreview.total_discount.toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                    
+                    <div className="flex justify-between items-center border-t pt-2">
+                      <span className="text-lg font-semibold">Total:</span>
+                      <span className="text-2xl font-bold font-mono text-accent" data-testid="cart-total">
+                        ${(discountPreview ? discountPreview.final_amount : getTotalAmount()).toFixed(2)}
+                      </span>
+                    </div>
                   </div>
+                  
+                  {/* Login prompt for non-members */}
+                  {!user && (
+                    <div className="bg-[#D9A54C]/10 border border-[#D9A54C] rounded-lg p-3 text-center">
+                      <p className="text-sm text-[#5A3A2A]">
+                        <Crown className="w-4 h-4 inline mr-1" />
+                        <span className="font-semibold">Login to get member discounts!</span>
+                      </p>
+                    </div>
+                  )}
+                  
                   <Button
                     onClick={handleCheckout}
                     data-testid="checkout-button"
