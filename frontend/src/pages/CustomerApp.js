@@ -278,6 +278,12 @@ const CustomerApp = () => {
             <div className="flex items-center gap-2">
               {user ? (
                 <>
+                  {membership && (
+                    <Badge className="bg-[#D9A54C] text-white hidden sm:flex items-center gap-1" data-testid="membership-badge">
+                      <Crown className="w-3 h-3" />
+                      {membership.program_name}
+                    </Badge>
+                  )}
                   <Button
                     variant="ghost"
                     size="sm"
