@@ -83,6 +83,48 @@ class Token(BaseModel):
     token_type: str
     user: User
 
+# Loyalty Program Models
+class Benefit(BaseModel):
+    benefit_type: Literal["food_discount", "beverage_discount", "wifi_discount", "custom"]
+    value: float = 0  # Percentage for discounts (e.g., 10 = 10%)
+    description: str = ""
+
+class LoyaltyProgramCreate(BaseModel):
+    name: str
+    description: str
+    duration_type: Literal["days", "months", "years", "lifetime"]
+    duration_value: Optional[int] = None  # Null for lifetime
+    benefits: List[Benefit]
+    is_group: bool = False  # True for group programs, False for individual
+    color: str = "#D9A54C"  # Badge color for display
+
+class LoyaltyProgram(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    description: str
+    duration_type: Literal["days", "months", "years", "lifetime"]
+    duration_value: Optional[int] = None
+    benefits: List[Benefit]
+    is_group: bool = False
+    color: str = "#D9A54C"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CustomerMembershipCreate(BaseModel):
+    program_id: str
+    customer_ids: List[str]  # Support multiple customers for group assignment
+
+class CustomerMembership(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    customer_id: str
+    program_id: str
+    program_name: str
+    start_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    end_date: Optional[datetime] = None  # Null for lifetime
+    status: Literal["active", "expired", "cancelled"] = "active"
+    benefits: List[Benefit] = []
+
 class Ingredient(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
