@@ -680,6 +680,10 @@ async def get_admin_stats(current_user: User = Depends(get_current_user)):
     revenue_result = await db.orders.aggregate(pipeline).to_list(1)
     total_revenue = revenue_result[0]["total"] if revenue_result else 0
     
+    # Get membership stats
+    active_memberships = await db.customer_memberships.count_documents({"status": "active"})
+    programs_count = await db.loyalty_programs.count_documents({})
+    
     return {
         "users_count": users_count,
         "orders_count": orders_count,
@@ -687,8 +691,244 @@ async def get_admin_stats(current_user: User = Depends(get_current_user)):
         "tables_count": tables_count,
         "pending_orders": pending_orders,
         "completed_orders": completed_orders,
-        "total_revenue": total_revenue
+        "total_revenue": total_revenue,
+        "active_memberships": active_memberships,
+        "programs_count": programs_count
     }
+
+# Loyalty Program Routes
+@api_router.post("/admin/programs", response_model=LoyaltyProgram)
+async def create_loyalty_program(program_data: LoyaltyProgramCreate, current_user: User = Depends(get_current_user)):
+    """Create a loyalty program - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    program = LoyaltyProgram(
+        name=program_data.name,
+        description=program_data.description,
+        duration_type=program_data.duration_type,
+        duration_value=program_data.duration_value,
+        benefits=program_data.benefits,
+        is_group=program_data.is_group,
+        color=program_data.color
+    )
+    
+    program_dict = program.model_dump()
+    program_dict["created_at"] = program_dict["created_at"].isoformat()
+    # Convert benefits to dict for MongoDB
+    program_dict["benefits"] = [b.model_dump() if hasattr(b, 'model_dump') else b for b in program_dict["benefits"]]
+    
+    await db.loyalty_programs.insert_one(program_dict)
+    return program
+
+@api_router.get("/admin/programs")
+async def get_loyalty_programs(current_user: User = Depends(get_current_user)):
+    """Get all loyalty programs - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    programs = await db.loyalty_programs.find({}, {"_id": 0}).to_list(1000)
+    for p in programs:
+        if isinstance(p.get("created_at"), str):
+            p["created_at"] = datetime.fromisoformat(p["created_at"])
+        # Count active members
+        p["active_members"] = await db.customer_memberships.count_documents({
+            "program_id": p["id"], 
+            "status": "active"
+        })
+    return programs
+
+@api_router.get("/admin/programs/{program_id}")
+async def get_loyalty_program(program_id: str, current_user: User = Depends(get_current_user)):
+    """Get a specific loyalty program - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    program = await db.loyalty_programs.find_one({"id": program_id}, {"_id": 0})
+    if not program:
+        raise HTTPException(status_code=404, detail="Program not found")
+    
+    # Get members of this program
+    members = await db.customer_memberships.find(
+        {"program_id": program_id, "status": "active"}, 
+        {"_id": 0}
+    ).to_list(1000)
+    
+    # Enrich with customer info
+    for m in members:
+        customer = await db.users.find_one({"id": m["customer_id"]}, {"_id": 0, "password": 0})
+        if customer:
+            m["customer_name"] = customer.get("name")
+            m["customer_email"] = customer.get("email")
+    
+    program["members"] = members
+    return program
+
+@api_router.put("/admin/programs/{program_id}")
+async def update_loyalty_program(program_id: str, program_data: LoyaltyProgramCreate, current_user: User = Depends(get_current_user)):
+    """Update a loyalty program - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    update_data = program_data.model_dump()
+    update_data["benefits"] = [b.model_dump() if hasattr(b, 'model_dump') else b for b in update_data["benefits"]]
+    
+    result = await db.loyalty_programs.update_one(
+        {"id": program_id}, 
+        {"$set": update_data}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Program not found")
+    
+    # Update benefits for active memberships
+    await db.customer_memberships.update_many(
+        {"program_id": program_id, "status": "active"},
+        {"$set": {"benefits": update_data["benefits"], "program_name": update_data["name"]}}
+    )
+    
+    return {"message": "Program updated successfully"}
+
+@api_router.delete("/admin/programs/{program_id}")
+async def delete_loyalty_program(program_id: str, current_user: User = Depends(get_current_user)):
+    """Delete a loyalty program - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Cancel all memberships first
+    await db.customer_memberships.update_many(
+        {"program_id": program_id},
+        {"$set": {"status": "cancelled"}}
+    )
+    
+    result = await db.loyalty_programs.delete_one({"id": program_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Program not found")
+    
+    return {"message": "Program deleted and memberships cancelled"}
+
+# Customer Membership Routes
+@api_router.post("/admin/memberships")
+async def assign_membership(membership_data: CustomerMembershipCreate, current_user: User = Depends(get_current_user)):
+    """Assign membership to customer(s) - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Get program
+    program = await db.loyalty_programs.find_one({"id": membership_data.program_id}, {"_id": 0})
+    if not program:
+        raise HTTPException(status_code=404, detail="Program not found")
+    
+    # Calculate end date
+    start_date = datetime.now(timezone.utc)
+    end_date = None
+    
+    if program["duration_type"] != "lifetime" and program.get("duration_value"):
+        if program["duration_type"] == "days":
+            end_date = start_date + timedelta(days=program["duration_value"])
+        elif program["duration_type"] == "months":
+            end_date = start_date + timedelta(days=program["duration_value"] * 30)
+        elif program["duration_type"] == "years":
+            end_date = start_date + timedelta(days=program["duration_value"] * 365)
+    
+    created_memberships = []
+    
+    for customer_id in membership_data.customer_ids:
+        # Check if customer exists
+        customer = await db.users.find_one({"id": customer_id})
+        if not customer:
+            continue
+        
+        # Check for existing active membership in same program
+        existing = await db.customer_memberships.find_one({
+            "customer_id": customer_id,
+            "program_id": membership_data.program_id,
+            "status": "active"
+        })
+        
+        if existing:
+            continue  # Skip if already has this membership
+        
+        membership = CustomerMembership(
+            customer_id=customer_id,
+            program_id=membership_data.program_id,
+            program_name=program["name"],
+            start_date=start_date,
+            end_date=end_date,
+            benefits=program.get("benefits", [])
+        )
+        
+        membership_dict = membership.model_dump()
+        membership_dict["start_date"] = membership_dict["start_date"].isoformat()
+        if membership_dict["end_date"]:
+            membership_dict["end_date"] = membership_dict["end_date"].isoformat()
+        membership_dict["benefits"] = [b if isinstance(b, dict) else b.model_dump() for b in membership_dict["benefits"]]
+        
+        await db.customer_memberships.insert_one(membership_dict)
+        created_memberships.append(membership)
+    
+    return {"message": f"Membership assigned to {len(created_memberships)} customer(s)", "memberships": created_memberships}
+
+@api_router.get("/admin/memberships")
+async def get_all_memberships(status: Optional[str] = None, current_user: User = Depends(get_current_user)):
+    """Get all memberships - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    query = {}
+    if status:
+        query["status"] = status
+    
+    memberships = await db.customer_memberships.find(query, {"_id": 0}).to_list(1000)
+    
+    # Enrich with customer info
+    for m in memberships:
+        customer = await db.users.find_one({"id": m["customer_id"]}, {"_id": 0, "password": 0})
+        if customer:
+            m["customer_name"] = customer.get("name")
+            m["customer_email"] = customer.get("email")
+    
+    return memberships
+
+@api_router.get("/admin/customers/{customer_id}/membership")
+async def get_customer_membership(customer_id: str, current_user: User = Depends(get_current_user)):
+    """Get customer's active memberships - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    memberships = await db.customer_memberships.find(
+        {"customer_id": customer_id, "status": "active"},
+        {"_id": 0}
+    ).to_list(100)
+    
+    return memberships
+
+@api_router.delete("/admin/memberships/{membership_id}")
+async def cancel_membership(membership_id: str, current_user: User = Depends(get_current_user)):
+    """Cancel a membership - Admin only"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.customer_memberships.update_one(
+        {"id": membership_id},
+        {"$set": {"status": "cancelled"}}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Membership not found")
+    
+    return {"message": "Membership cancelled"}
+
+# Customer can view their own membership
+@api_router.get("/my/membership")
+async def get_my_membership(current_user: User = Depends(get_current_user)):
+    """Get current user's active memberships"""
+    memberships = await db.customer_memberships.find(
+        {"customer_id": current_user.id, "status": "active"},
+        {"_id": 0}
+    ).to_list(100)
+    
+    return memberships
 
 @api_router.get("/")
 async def root():
