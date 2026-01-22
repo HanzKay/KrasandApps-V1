@@ -664,13 +664,42 @@ const CustomerApp = () => {
                 placeholder="Any special requests?"
               />
             </div>
-            <div className="bg-muted p-4 rounded-lg">
+            <div className="bg-muted p-4 rounded-lg space-y-2">
               <p className="text-sm text-muted-foreground mb-2">Order Summary:</p>
               <p className="font-medium">Type: {orderType}</p>
               {tableInfo && <p className="font-medium">Table: {tableInfo.table_number}</p>}
-              <p className="text-xl font-bold font-mono text-accent mt-2">
-                Total: ${getTotalAmount().toFixed(2)}
-              </p>
+              
+              {/* Discount info in checkout */}
+              {discountPreview && discountPreview.discount_info && (
+                <div className="bg-[#4A7A5E]/10 rounded p-2 my-2">
+                  <p className="text-sm text-[#4A7A5E] font-semibold flex items-center gap-1">
+                    <Crown className="w-4 h-4" />
+                    {discountPreview.discount_info.program_name} Member
+                  </p>
+                  <p className="text-sm text-[#4A7A5E]">
+                    You save: ${discountPreview.total_discount.toFixed(2)}
+                  </p>
+                </div>
+              )}
+              
+              <div className="border-t pt-2 mt-2 space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span>Subtotal:</span>
+                  <span className="font-mono">${getTotalAmount().toFixed(2)}</span>
+                </div>
+                {discountPreview && discountPreview.total_discount > 0 && (
+                  <div className="flex justify-between text-sm text-[#4A7A5E]">
+                    <span>Discount:</span>
+                    <span className="font-mono">-${discountPreview.total_discount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="font-semibold">Total:</span>
+                  <span className="text-xl font-bold font-mono text-accent">
+                    ${(discountPreview ? discountPreview.final_amount : getTotalAmount()).toFixed(2)}
+                  </span>
+                </div>
+              </div>
             </div>
             <Button
               onClick={placeOrder}
