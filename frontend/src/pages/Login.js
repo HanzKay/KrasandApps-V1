@@ -167,6 +167,7 @@ const Login = () => {
                     <option value="waiter">Waiter</option>
                     <option value="kitchen">Kitchen Staff</option>
                     <option value="storage">Storage Staff</option>
+                    <option value="admin">Admin</option>
                   </select>
                 </div>
                 <Button
