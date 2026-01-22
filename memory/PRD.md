@@ -22,7 +22,7 @@ Build an interconnected system of applications for a coffee shop with:
 | Waiter | `/waiter` | Staff - order status, table management |
 | Kitchen | `/kitchen` | Staff - order preparation |
 | Storage | `/storage` | Staff - inventory, products, COGS |
-| Admin | `/admin` | Full - user management, all stats |
+| Admin | `/admin` | Full - user management, loyalty programs, all stats |
 
 ## Security Model
 - **Customers**: Self-register at `/login` with optional membership
@@ -36,6 +36,7 @@ Build an interconnected system of applications for a coffee shop with:
 - [x] Add to cart
 - [x] Place orders (dine-in, delivery, to-go)
 - [x] Customer registration with membership option
+- [x] View own membership benefits (`/api/my/membership`)
 
 ### Kitchen Dashboard (`/kitchen`)
 - [x] View active orders
@@ -64,6 +65,39 @@ Build an interconnected system of applications for a coffee shop with:
 - [x] System statistics
 - [x] Revenue tracking
 - [x] Role distribution overview
+- [x] **Loyalty Programs** (NEW)
+- [x] **Membership Management** (NEW)
+
+## Loyalty Program Feature (NEW)
+
+### Program Configuration
+- **Duration Types**: Days, Months, Years, Lifetime
+- **Program Types**: Individual or Group
+- **Badge Colors**: 6 customizable colors
+- **Benefits**:
+  - Food Discount (%)
+  - Beverage Discount (%)
+  - WiFi Discount (%)
+  - Custom benefits
+
+### Admin Capabilities
+- Create/Edit/Delete loyalty programs
+- Assign memberships to individual customers
+- Assign memberships to multiple customers (group)
+- Cancel memberships
+- View active member counts per program
+
+### Customer Membership
+- Customers can view their active memberships
+- Membership includes:
+  - Program name
+  - Start/End dates (or "Lifetime")
+  - List of benefits
+  - Status (active/expired/cancelled)
+
+### Sample Programs Created
+1. **Gold Member** (Lifetime) - 15% food, 10% beverages, Free WiFi
+2. **Silver Club** (1 month) - 5% food, 5% beverages
 
 ## API Endpoints
 
@@ -72,33 +106,31 @@ Build an interconnected system of applications for a coffee shop with:
 - `POST /api/auth/login` - All users
 - `GET /api/auth/me` - Get current user
 
-### Admin (Admin only)
+### Admin - Users
 - `GET /api/admin/users` - List all users
 - `POST /api/admin/users` - Create user with any role
 - `PUT /api/admin/users/{id}/role` - Update user role
 - `DELETE /api/admin/users/{id}` - Delete user
 - `GET /api/admin/stats` - Dashboard statistics
 
-### Products (Public read, Staff write)
-- `GET /api/products` - List products
-- `POST /api/products` - Create product
-- `PUT /api/products/{id}` - Update product
+### Admin - Loyalty Programs (NEW)
+- `GET /api/admin/programs` - List all programs
+- `POST /api/admin/programs` - Create program
+- `GET /api/admin/programs/{id}` - Get program with members
+- `PUT /api/admin/programs/{id}` - Update program
+- `DELETE /api/admin/programs/{id}` - Delete program
 
-### Orders
-- `POST /api/orders` - Create order (public)
-- `GET /api/orders` - List orders (authenticated)
-- `PUT /api/orders/{id}/status` - Update status
-- `PUT /api/orders/{id}/payment` - Process payment
+### Admin - Memberships (NEW)
+- `GET /api/admin/memberships` - List all memberships
+- `POST /api/admin/memberships` - Assign membership(s)
+- `DELETE /api/admin/memberships/{id}` - Cancel membership
+- `GET /api/admin/customers/{id}/membership` - Get customer memberships
 
-### Tables
-- `GET /api/tables` - List tables
-- `POST /api/tables` - Create table with QR
-- `PUT /api/tables/{id}/status` - Update status
+### Customer - Membership (NEW)
+- `GET /api/my/membership` - View own memberships
 
-### Inventory (Storage/Kitchen)
-- `GET /api/ingredients` - List ingredients
-- `POST /api/ingredients` - Add ingredient
-- `GET /api/cogs` - List COGS entries
+### Products, Orders, Tables, Inventory
+- (See previous documentation)
 
 ## Database Collections
 - `users` - User accounts with roles
@@ -108,17 +140,23 @@ Build an interconnected system of applications for a coffee shop with:
 - `ingredients` - Inventory items
 - `cogs` - Cost of goods sold entries
 - `transactions` - Payment records
+- `loyalty_programs` - Loyalty program definitions (NEW)
+- `customer_memberships` - Customer-program assignments (NEW)
 
 ## Credentials
 - **Admin**: admin@kopikrasand.com / Admin123!
 
+## Test Results
+- **Backend**: 100% (24/24 loyalty program tests passed)
+- **Frontend**: 95% functional (all core features working)
+
 ## Upcoming Features (Backlog)
 1. GPS tracking for to-go orders
-2. Recipe-based inventory auto-deduction (partially implemented)
+2. Recipe-based inventory auto-deduction
 3. Table reservation system
 4. Payment provider integration (Stripe)
-5. Transaction log/reporting
-6. Member rewards/points system
+5. Member rewards/points system
+6. Discount application at checkout based on membership
 
 ## Branding
 - Logo: Kopi Krasand
