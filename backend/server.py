@@ -350,15 +350,25 @@ async def create_order(order: OrderCreate):
     
     await db.orders.insert_one(order_dict)
     
-    # Update ingredient stock
+    # Update ingredient stock - Batch optimized (fixes N+1 query)
+    product_ids = [item.product_id for item in order_obj.items]
+    products = await db.products.find({"id": {"$in": product_ids}}).to_list(None)
+    product_map = {p["id"]: p for p in products}
+    
+    bulk_ops = []
     for item in order_obj.items:
-        product = await db.products.find_one({"id": item.product_id})
+        product = product_map.get(item.product_id)
         if product and "recipes" in product:
             for recipe in product["recipes"]:
-                await db.ingredients.update_one(
-                    {"id": recipe["ingredient_id"]},
-                    {"$inc": {"current_stock": -recipe["quantity"] * item.quantity}}
+                bulk_ops.append(
+                    UpdateOne(
+                        {"id": recipe["ingredient_id"]},
+                        {"$inc": {"current_stock": -recipe["quantity"] * item.quantity}}
+                    )
                 )
+    
+    if bulk_ops:
+        await db.ingredients.bulk_write(bulk_ops)
     
     return order_obj
 
