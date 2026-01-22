@@ -674,7 +674,7 @@ const CustomerApp = () => {
                 <div className="bg-[#4A7A5E]/10 rounded p-2 my-2">
                   <p className="text-sm text-[#4A7A5E] font-semibold flex items-center gap-1">
                     <Crown className="w-4 h-4" />
-                    {discountPreview.discount_info.program_name} Member
+                    {discountPreview.discount_info.program_name}
                   </p>
                   <p className="text-sm text-[#4A7A5E]">
                     You save: ${discountPreview.total_discount.toFixed(2)}
