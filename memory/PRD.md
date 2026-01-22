@@ -3,9 +3,9 @@
 ## Original Problem Statement
 Build an interconnected system of applications for a coffee shop with:
 1. **Menu Order App** (Customer) - Reserve tables, order for dine-in/delivery/to-go, payment options
-2. **Order Request App** (Kitchen) - Receive orders, update progress, show customer position for pickup
-3. **POS Dashboard** (Cashier) - Process payments, generate receipts, transaction log
-4. **Inventory Management App** (Storage) - Track ingredients, COGS data, pricing support
+2. **Order Request App** (Kitchen) - Receive orders, update progress
+3. **POS Dashboard** (Cashier) - Process payments, generate receipts
+4. **Inventory Management App** (Storage) - Track ingredients, COGS data
 
 ## Tech Stack
 - **Backend**: FastAPI (Python 3)
@@ -22,7 +22,7 @@ Build an interconnected system of applications for a coffee shop with:
 | Waiter | `/waiter` | Staff - order status, table management |
 | Kitchen | `/kitchen` | Staff - order preparation |
 | Storage | `/storage` | Staff - inventory, products, COGS |
-| Admin | `/admin` | Full - user management, loyalty programs, all stats |
+| Admin | `/admin` | Full - user management, loyalty programs |
 
 ## Security Model
 - **Customers**: Self-register at `/login` with optional membership
@@ -33,10 +33,27 @@ Build an interconnected system of applications for a coffee shop with:
 
 ### Customer App (`/`)
 - [x] Browse menu (beverages & food)
-- [x] Add to cart
+- [x] Add to cart with quantity controls
 - [x] Place orders (dine-in, delivery, to-go)
 - [x] Customer registration with membership option
-- [x] View own membership benefits (`/api/my/membership`)
+- [x] View own membership benefits
+- [x] **Automatic discount at checkout** (NEW)
+- [x] **Discount preview in cart** (NEW)
+- [x] **Gold Member badge in header** (NEW)
+
+### Automatic Discount Feature (NEW)
+When a customer with active membership places an order:
+1. System checks customer's active membership
+2. Gets discount benefits (food %, beverage %)
+3. Calculates discounts based on item categories
+4. Applies discount to order total automatically
+5. Shows breakdown: subtotal, discounts, final amount
+
+**Example:**
+- Gold Member with 15% food, 10% beverage discount
+- Order: 3x Espresso ($3.50 each = $10.50 beverages)
+- Discount: 10% off beverages = -$1.05
+- Final: $9.45
 
 ### Kitchen Dashboard (`/kitchen`)
 - [x] View active orders
@@ -64,38 +81,18 @@ Build an interconnected system of applications for a coffee shop with:
 - [x] User management (add, edit role, delete)
 - [x] System statistics
 - [x] Revenue tracking
-- [x] Role distribution overview
-- [x] **Loyalty Programs** (NEW)
-- [x] **Membership Management** (NEW)
+- [x] **Loyalty Programs** with full CRUD
+- [x] **Membership Management** - assign/cancel
+- [x] Programs: Days, Months, Years, Lifetime durations
 
-## Loyalty Program Feature (NEW)
+## Loyalty Program Feature
 
 ### Program Configuration
 - **Duration Types**: Days, Months, Years, Lifetime
 - **Program Types**: Individual or Group
-- **Badge Colors**: 6 customizable colors
-- **Benefits**:
-  - Food Discount (%)
-  - Beverage Discount (%)
-  - WiFi Discount (%)
-  - Custom benefits
+- **Benefits**: Food %, Beverage %, WiFi %, Custom
 
-### Admin Capabilities
-- Create/Edit/Delete loyalty programs
-- Assign memberships to individual customers
-- Assign memberships to multiple customers (group)
-- Cancel memberships
-- View active member counts per program
-
-### Customer Membership
-- Customers can view their active memberships
-- Membership includes:
-  - Program name
-  - Start/End dates (or "Lifetime")
-  - List of benefits
-  - Status (active/expired/cancelled)
-
-### Sample Programs Created
+### Sample Programs
 1. **Gold Member** (Lifetime) - 15% food, 10% beverages, Free WiFi
 2. **Silver Club** (1 month) - 5% food, 5% beverages
 
@@ -104,61 +101,40 @@ Build an interconnected system of applications for a coffee shop with:
 ### Auth
 - `POST /api/auth/register` - Customer registration only
 - `POST /api/auth/login` - All users
-- `GET /api/auth/me` - Get current user
 
-### Admin - Users
-- `GET /api/admin/users` - List all users
-- `POST /api/admin/users` - Create user with any role
-- `PUT /api/admin/users/{id}/role` - Update user role
-- `DELETE /api/admin/users/{id}` - Delete user
-- `GET /api/admin/stats` - Dashboard statistics
+### Orders (with automatic discount)
+- `POST /api/orders` - Create order with auto-discount
+- `POST /api/orders/preview-discount` - Preview discount before checkout
+- `GET /api/orders` - List orders (includes discount_info)
 
-### Admin - Loyalty Programs (NEW)
-- `GET /api/admin/programs` - List all programs
-- `POST /api/admin/programs` - Create program
-- `GET /api/admin/programs/{id}` - Get program with members
-- `PUT /api/admin/programs/{id}` - Update program
-- `DELETE /api/admin/programs/{id}` - Delete program
-
-### Admin - Memberships (NEW)
-- `GET /api/admin/memberships` - List all memberships
-- `POST /api/admin/memberships` - Assign membership(s)
+### Admin - Loyalty Programs
+- `GET, POST, PUT, DELETE /api/admin/programs`
+- `POST /api/admin/memberships` - Assign membership
 - `DELETE /api/admin/memberships/{id}` - Cancel membership
-- `GET /api/admin/customers/{id}/membership` - Get customer memberships
 
-### Customer - Membership (NEW)
+### Customer
 - `GET /api/my/membership` - View own memberships
 
-### Products, Orders, Tables, Inventory
-- (See previous documentation)
-
 ## Database Collections
-- `users` - User accounts with roles
-- `products` - Menu items with recipes
-- `orders` - Customer orders
-- `tables` - Table configurations with QR codes
-- `ingredients` - Inventory items
-- `cogs` - Cost of goods sold entries
-- `transactions` - Payment records
-- `loyalty_programs` - Loyalty program definitions (NEW)
-- `customer_memberships` - Customer-program assignments (NEW)
+- `users`, `products`, `orders`, `tables`
+- `ingredients`, `cogs`, `transactions`
+- `loyalty_programs`, `customer_memberships`
+
+## Test Results
+- **Backend**: 14/14 discount tests passed (100%)
+- **Frontend**: All discount UI features working
 
 ## Credentials
 - **Admin**: admin@kopikrasand.com / Admin123!
-
-## Test Results
-- **Backend**: 100% (24/24 loyalty program tests passed)
-- **Frontend**: 95% functional (all core features working)
+- **Test Member**: newcustomer@test.com / Test123! (Gold Member)
 
 ## Upcoming Features (Backlog)
 1. GPS tracking for to-go orders
-2. Recipe-based inventory auto-deduction
-3. Table reservation system
-4. Payment provider integration (Stripe)
-5. Member rewards/points system
-6. Discount application at checkout based on membership
+2. Table reservation system
+3. Payment provider integration (Stripe)
+4. Member points/rewards accumulation
+5. Receipt includes discount breakdown
 
 ## Branding
 - Logo: Kopi Krasand
-- Colors: Rich brown (#5A3A2A), Cream (#F5EEDC), Gold (#D9A54C), Green (#4A7A5E)
-- Fonts: Playfair Display (headings), DM Sans (body)
+- Colors: Brown (#5A3A2A), Cream (#F5EEDC), Gold (#D9A54C), Green (#4A7A5E)
