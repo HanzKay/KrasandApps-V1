@@ -252,7 +252,7 @@ async def get_me(current_user: User = Depends(get_current_user)):
 # Products Routes
 @api_router.post("/products", response_model=Product)
 async def create_product(product: Product, current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["inventory_manager", "cashier"]:
+    if current_user.role not in ["storage", "cashier"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     product_dict = product.model_dump()
@@ -282,7 +282,7 @@ async def get_product(product_id: str):
 
 @api_router.put("/products/{product_id}", response_model=Product)
 async def update_product(product_id: str, product: Product, current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["inventory_manager", "cashier"]:
+    if current_user.role not in ["storage", "cashier"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     product_dict = product.model_dump()
@@ -293,7 +293,7 @@ async def update_product(product_id: str, product: Product, current_user: User =
 # Tables Routes
 @api_router.post("/tables", response_model=Table)
 async def create_table(table: TableCreate, current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["inventory_manager", "cashier"]:
+    if current_user.role not in ["storage", "cashier", "waiter"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     qr_data = f"table-{table.table_number}-{str(uuid.uuid4())[:8]}"
@@ -324,6 +324,8 @@ async def verify_table_qr(qr_code: str):
 
 @api_router.put("/tables/{table_id}/status")
 async def update_table_status(table_id: str, status: dict, current_user: User = Depends(get_current_user)):
+    if current_user.role not in ["waiter", "cashier"]:
+        raise HTTPException(status_code=403, detail="Not authorized")
     await db.tables.update_one({"id": table_id}, {"$set": {"status": status["status"]}})
     return {"message": "Table status updated"}
 
