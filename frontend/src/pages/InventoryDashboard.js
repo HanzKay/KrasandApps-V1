@@ -128,20 +128,24 @@ const InventoryDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#F5EEDC]">
-      <header className="bg-white border-b border-secondary p-4 shadow-sm">
+      <header className="bg-[#5A3A2A] border-b border-[#6b4a3a] p-4 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Package className="w-8 h-8 text-primary" />
+            <img 
+              src="https://customer-assets.emergentagent.com/job_eatease-19/artifacts/ks9z3yrd_KopiKrasand.png" 
+              alt="Kopi Krasand"
+              className="h-12"
+            />
             <div>
-              <h1 className="text-2xl font-playfair font-bold text-primary">Inventory Management</h1>
-              <p className="text-sm text-muted-foreground">{user?.name}</p>
+              <h1 className="text-xl font-playfair font-bold text-white">Storage Dashboard</h1>
+              <p className="text-sm text-[#F5EEDC]">{user?.name}</p>
             </div>
           </div>
           <Button
             onClick={logout}
-            data-testid="inventory-logout-button"
+            data-testid="storage-logout-button"
             variant="outline"
-            className="border-primary/20 text-primary hover:bg-primary/10"
+            className="text-white border-white/20 hover:bg-white/10"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Logout
@@ -149,7 +153,7 @@ const InventoryDashboard = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto p-6" data-testid="inventory-dashboard">
+      <main className="max-w-7xl mx-auto p-6" data-testid="storage-dashboard">
         <Tabs defaultValue="ingredients" className="space-y-6">
           <TabsList className="bg-white border border-secondary">
             <TabsTrigger value="ingredients" data-testid="tab-ingredients">Ingredients</TabsTrigger>
