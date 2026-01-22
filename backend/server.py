@@ -531,6 +531,92 @@ async def create_order(order: OrderCreate):
     
     return order_obj
 
+class DiscountPreviewRequest(BaseModel):
+    customer_id: str
+    items: List[OrderItem]
+
+@api_router.post("/orders/preview-discount")
+async def preview_order_discount(request: DiscountPreviewRequest):
+    """Preview discount for an order before checkout"""
+    # Get all products to determine categories
+    product_ids = [item.product_id for item in request.items]
+    products = await db.products.find({"id": {"$in": product_ids}}).to_list(None)
+    product_map = {p["id"]: p for p in products}
+    
+    # Calculate totals by category
+    subtotal = 0
+    food_total = 0
+    beverage_total = 0
+    
+    for item in request.items:
+        product = product_map.get(item.product_id)
+        item_total = item.price * item.quantity
+        subtotal += item_total
+        
+        category = product.get("category", "food") if product else "food"
+        if category == "food":
+            food_total += item_total
+        else:
+            beverage_total += item_total
+    
+    # Check for customer membership
+    discount_info = None
+    total_discount = 0
+    
+    membership = await db.customer_memberships.find_one({
+        "customer_id": request.customer_id,
+        "status": "active"
+    })
+    
+    if membership:
+        # Check expiration
+        end_date = membership.get("end_date")
+        is_valid = True
+        if end_date:
+            if isinstance(end_date, str):
+                end_date = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+            if end_date < datetime.now(timezone.utc):
+                is_valid = False
+        
+        if is_valid:
+            benefits = membership.get("benefits", [])
+            food_discount_percent = 0
+            beverage_discount_percent = 0
+            
+            for benefit in benefits:
+                benefit_type = benefit.get("benefit_type")
+                value = benefit.get("value", 0)
+                
+                if benefit_type == "food_discount":
+                    food_discount_percent = max(food_discount_percent, value)
+                elif benefit_type == "beverage_discount":
+                    beverage_discount_percent = max(beverage_discount_percent, value)
+            
+            food_discount_amount = round(food_total * (food_discount_percent / 100), 2)
+            beverage_discount_amount = round(beverage_total * (beverage_discount_percent / 100), 2)
+            total_discount = food_discount_amount + beverage_discount_amount
+            
+            if total_discount > 0 or food_discount_percent > 0 or beverage_discount_percent > 0:
+                discount_info = {
+                    "membership_id": membership["id"],
+                    "program_name": membership.get("program_name", "Member"),
+                    "food_discount_percent": food_discount_percent,
+                    "beverage_discount_percent": beverage_discount_percent,
+                    "food_discount_amount": food_discount_amount,
+                    "beverage_discount_amount": beverage_discount_amount,
+                    "total_discount": total_discount
+                }
+    
+    return {
+        "subtotal": round(subtotal, 2),
+        "food_total": round(food_total, 2),
+        "beverage_total": round(beverage_total, 2),
+        "discount_info": discount_info,
+        "total_discount": round(total_discount, 2),
+        "final_amount": round(subtotal - total_discount, 2),
+        "has_membership": membership is not None
+    }
+
 @api_router.get("/orders", response_model=List[Order])
 async def get_orders(
     status: Optional[str] = None,
