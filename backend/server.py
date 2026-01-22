@@ -217,7 +217,8 @@ def generate_qr_code(data: str):
 
 # Auth Routes
 @api_router.post("/auth/register", response_model=Token)
-async def register(user_data: UserRegister):
+async def register(user_data: CustomerRegister):
+    """Public registration - Customers only"""
     existing = await db.users.find_one({"email": user_data.email})
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -226,11 +227,12 @@ async def register(user_data: UserRegister):
     user = User(
         email=user_data.email,
         name=user_data.name,
-        role=user_data.role
+        role="customer"  # Always customer for public registration
     )
     user_dict = user.model_dump()
     user_dict["password"] = hashed_password
     user_dict["created_at"] = user_dict["created_at"].isoformat()
+    user_dict["is_member"] = user_data.is_member  # Store membership status
     
     await db.users.insert_one(user_dict)
     
