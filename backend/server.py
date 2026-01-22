@@ -471,7 +471,7 @@ async def process_payment(
 # Ingredients Routes
 @api_router.post("/ingredients", response_model=Ingredient)
 async def create_ingredient(ingredient: Ingredient, current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["inventory_manager"]:
+    if current_user.role not in ["storage"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     ingredient_dict = ingredient.model_dump()
@@ -481,7 +481,7 @@ async def create_ingredient(ingredient: Ingredient, current_user: User = Depends
 
 @api_router.get("/ingredients", response_model=List[Ingredient])
 async def get_ingredients(current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["inventory_manager", "kitchen"]:
+    if current_user.role not in ["storage", "kitchen"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     ingredients = await db.ingredients.find({}, {"_id": 0}).to_list(1000)
@@ -496,7 +496,7 @@ async def update_ingredient(
     ingredient: Ingredient,
     current_user: User = Depends(get_current_user)
 ):
-    if current_user.role not in ["inventory_manager"]:
+    if current_user.role not in ["storage"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     ingredient_dict = ingredient.model_dump()
@@ -507,7 +507,7 @@ async def update_ingredient(
 # COGS Routes
 @api_router.post("/cogs", response_model=COGS)
 async def create_cogs(cogs: COGS, current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["inventory_manager"]:
+    if current_user.role not in ["storage"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     cogs_dict = cogs.model_dump()
@@ -516,7 +516,7 @@ async def create_cogs(cogs: COGS, current_user: User = Depends(get_current_user)
 
 @api_router.get("/cogs", response_model=List[COGS])
 async def get_cogs(current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["inventory_manager"]:
+    if current_user.role not in ["storage"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     cogs_list = await db.cogs.find({}, {"_id": 0}).to_list(1000)
