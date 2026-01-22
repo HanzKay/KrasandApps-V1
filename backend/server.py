@@ -42,7 +42,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 api_router = APIRouter(prefix="/api")
 
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
+SECRET_KEY = os.getenv("SECRET_KEY", os.urandom(32).hex())
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 10080
 
