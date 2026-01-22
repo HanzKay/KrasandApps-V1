@@ -5,6 +5,7 @@ import KitchenDashboard from './pages/KitchenDashboard';
 import POSDashboard from './pages/POSDashboard';
 import InventoryDashboard from './pages/InventoryDashboard';
 import WaiterDashboard from './pages/WaiterDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -39,6 +40,16 @@ function App() {
             {/* Customer App - Public Access */}
             <Route path="/" element={<CustomerApp />} />
             <Route path="/login" element={<Login />} />
+            
+            {/* Admin Dashboard - Admin Only */}
+            <Route
+              path="/admin"
+              element={
+                <PrivateRoute allowedRoles={['admin']}>
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
             
             {/* Kitchen Dashboard - Kitchen Staff Only */}
             <Route
