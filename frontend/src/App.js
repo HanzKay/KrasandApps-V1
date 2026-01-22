@@ -4,6 +4,7 @@ import CustomerApp from './pages/CustomerApp';
 import KitchenDashboard from './pages/KitchenDashboard';
 import POSDashboard from './pages/POSDashboard';
 import InventoryDashboard from './pages/InventoryDashboard';
+import WaiterDashboard from './pages/WaiterDashboard';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -35,8 +36,11 @@ function App() {
       <BrowserRouter>
         <div className="App">
           <Routes>
+            {/* Customer App - Public Access */}
             <Route path="/" element={<CustomerApp />} />
             <Route path="/login" element={<Login />} />
+            
+            {/* Kitchen Dashboard - Kitchen Staff Only */}
             <Route
               path="/kitchen"
               element={
@@ -45,6 +49,8 @@ function App() {
                 </PrivateRoute>
               }
             />
+            
+            {/* POS Dashboard - Cashier Only */}
             <Route
               path="/pos"
               element={
@@ -53,14 +59,29 @@ function App() {
                 </PrivateRoute>
               }
             />
+            
+            {/* Waiter Dashboard - Waiter Only */}
             <Route
-              path="/inventory"
+              path="/waiter"
               element={
-                <PrivateRoute allowedRoles={['inventory_manager']}>
+                <PrivateRoute allowedRoles={['waiter']}>
+                  <WaiterDashboard />
+                </PrivateRoute>
+              }
+            />
+            
+            {/* Inventory/Storage Dashboard - Storage Staff Only */}
+            <Route
+              path="/storage"
+              element={
+                <PrivateRoute allowedRoles={['storage']}>
                   <InventoryDashboard />
                 </PrivateRoute>
               }
             />
+            
+            {/* Legacy route redirect */}
+            <Route path="/inventory" element={<Navigate to="/storage" replace />} />
           </Routes>
           <Toaster position="top-center" richColors />
         </div>
