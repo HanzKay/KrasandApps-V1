@@ -525,7 +525,7 @@ async def get_cogs(current_user: User = Depends(get_current_user)):
 # Transactions Routes
 @api_router.get("/transactions", response_model=List[Transaction])
 async def get_transactions(current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["cashier", "inventory_manager"]:
+    if current_user.role not in ["cashier", "storage"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     transactions = await db.transactions.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
