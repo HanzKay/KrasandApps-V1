@@ -6,6 +6,7 @@ import POSDashboard from './pages/POSDashboard';
 import InventoryDashboard from './pages/InventoryDashboard';
 import WaiterDashboard from './pages/WaiterDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import CMSDashboard from './pages/CMSDashboard';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -47,6 +48,16 @@ function App() {
               element={
                 <PrivateRoute allowedRoles={['admin']}>
                   <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+            
+            {/* CMS Dashboard - Admin Only */}
+            <Route
+              path="/cms"
+              element={
+                <PrivateRoute allowedRoles={['admin']}>
+                  <CMSDashboard />
                 </PrivateRoute>
               }
             />
