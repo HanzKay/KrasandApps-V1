@@ -381,34 +381,46 @@ async def create_product(product: Product, current_user: User = Depends(get_curr
     return product
 
 @api_router.get("/products", response_model=List[Product])
-async def get_products(category: Optional[str] = None):
-    query = {"available": True}
+async def get_products(category: Optional[str] = None, include_unavailable: Optional[str] = None):
+    query = {}
+    if include_unavailable != "true":
+        query["available"] = True
     if category:
         query["category"] = category
     products = await db.products.find(query, {"_id": 0}).to_list(1000)
     for p in products:
-        if isinstance(p["created_at"], str):
+        if isinstance(p.get("created_at"), str):
             p["created_at"] = datetime.fromisoformat(p["created_at"])
-    return products
+    return sorted(products, key=lambda x: x.get("sort_order", 0))
 
 @api_router.get("/products/{product_id}", response_model=Product)
 async def get_product(product_id: str):
     product = await db.products.find_one({"id": product_id}, {"_id": 0})
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    if isinstance(product["created_at"], str):
+    if isinstance(product.get("created_at"), str):
         product["created_at"] = datetime.fromisoformat(product["created_at"])
     return Product(**product)
 
 @api_router.put("/products/{product_id}", response_model=Product)
 async def update_product(product_id: str, product: Product, current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["storage", "cashier"]:
+    if current_user.role not in ["storage", "cashier", "admin"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     product_dict = product.model_dump()
     product_dict["created_at"] = product_dict["created_at"].isoformat()
     await db.products.update_one({"id": product_id}, {"$set": product_dict})
     return product
+
+@api_router.delete("/products/{product_id}")
+async def delete_product(product_id: str, current_user: User = Depends(get_current_user)):
+    if current_user.role not in ["admin"]:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.products.delete_one({"id": product_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return {"message": "Product deleted"}
 
 # Tables Routes
 @api_router.post("/tables", response_model=Table)
