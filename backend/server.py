@@ -143,12 +143,25 @@ class Product(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    description: str
-    category: Literal["beverage", "food"]
+    description: str = ""
+    category: str = "beverage"  # Changed from Literal to allow custom categories
     price: float
     image_url: Optional[str] = None
     recipes: List[Recipe] = []
     available: bool = True
+    featured: bool = False
+    sort_order: int = 0
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class Category(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    slug: str
+    description: str = ""
+    icon: str = "Coffee"
+    sort_order: int = 0
+    active: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class TableCreate(BaseModel):
