@@ -3,7 +3,10 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
-const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`;
+// In production (Docker), REACT_APP_BACKEND_URL is empty and nginx proxies /api/ to backend
+const API_URL = process.env.REACT_APP_BACKEND_URL 
+  ? `${process.env.REACT_APP_BACKEND_URL}/api`
+  : '/api';
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
