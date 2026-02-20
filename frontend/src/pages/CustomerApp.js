@@ -32,7 +32,10 @@ import {
 import { useAuth } from '../context/AuthContext';
 import QRScanner from '../components/QRScanner';
 
-const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`;
+// In production (Docker), REACT_APP_BACKEND_URL is empty and nginx proxies /api/ to backend
+const API_URL = process.env.REACT_APP_BACKEND_URL 
+  ? `${process.env.REACT_APP_BACKEND_URL}/api`
+  : '/api';
 
 // Error Boundary Component for sections
 const SectionErrorFallback = ({ error, onRetry, sectionName }) => (
