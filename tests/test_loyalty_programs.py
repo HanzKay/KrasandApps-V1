@@ -7,7 +7,7 @@ import requests
 import os
 from datetime import datetime
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://barista-app-1.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://kopi-system.preview.emergentagent.com')
 API_URL = f"{BASE_URL}/api"
 
 # Admin credentials
