@@ -328,10 +328,51 @@ async def login(credentials: UserLogin):
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
+# Categories Routes
+@api_router.get("/categories")
+async def get_categories():
+    """Get all active categories"""
+    categories = await db.categories.find({}, {"_id": 0}).to_list(1000)
+    if not categories:
+        # Return default categories if none exist
+        return [
+            {"id": "beverage", "name": "Beverages", "slug": "beverage", "sort_order": 1, "active": True},
+            {"id": "food", "name": "Food", "slug": "food", "sort_order": 2, "active": True}
+        ]
+    return sorted(categories, key=lambda x: x.get("sort_order", 0))
+
+@api_router.post("/categories", response_model=Category)
+async def create_category(category: Category, current_user: User = Depends(get_current_user)):
+    if current_user.role not in ["admin"]:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    category_dict = category.model_dump()
+    category_dict["created_at"] = category_dict["created_at"].isoformat()
+    await db.categories.insert_one(category_dict)
+    return category
+
+@api_router.put("/categories/{category_id}")
+async def update_category(category_id: str, category: Category, current_user: User = Depends(get_current_user)):
+    if current_user.role not in ["admin"]:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    category_dict = category.model_dump()
+    category_dict["created_at"] = category_dict["created_at"].isoformat()
+    await db.categories.update_one({"id": category_id}, {"$set": category_dict})
+    return {"message": "Category updated"}
+
+@api_router.delete("/categories/{category_id}")
+async def delete_category(category_id: str, current_user: User = Depends(get_current_user)):
+    if current_user.role not in ["admin"]:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    await db.categories.delete_one({"id": category_id})
+    return {"message": "Category deleted"}
+
 # Products Routes
 @api_router.post("/products", response_model=Product)
 async def create_product(product: Product, current_user: User = Depends(get_current_user)):
-    if current_user.role not in ["storage", "cashier"]:
+    if current_user.role not in ["storage", "cashier", "admin"]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     product_dict = product.model_dump()
