@@ -23,8 +23,6 @@ services:
   frontend:
     build: 
       context: ./frontend
-      args:
-        - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL:-http://localhost}
     container_name: kopi-krasand-frontend
     restart: unless-stopped
     ports:
