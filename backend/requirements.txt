@@ -16,7 +16,7 @@ passlib[bcrypt]==1.7.4
 bcrypt==4.1.2
 
 # Validation
-pydantic[email]==2.6.4
+pydantic[email]==2.9.2
 email-validator==2.1.1
 
 # Environment
