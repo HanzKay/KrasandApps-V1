@@ -63,7 +63,7 @@ const Login = () => {
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center mb-4">
             <img 
-              src="https://customer-assets.emergentagent.com/job_eatease-19/artifacts/ks9z3yrd_KopiKrasand.png" 
+              src="/images/logo.png" 
               alt="Kopi Krasand"
               className="h-20"
             />

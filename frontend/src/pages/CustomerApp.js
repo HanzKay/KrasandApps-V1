@@ -270,7 +270,7 @@ const CustomerApp = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img 
-                src="https://customer-assets.emergentagent.com/job_eatease-19/artifacts/ks9z3yrd_KopiKrasand.png" 
+                src="/images/logo.png" 
                 alt="Kopi Krasand"
                 className="logo-kopi"
               />
