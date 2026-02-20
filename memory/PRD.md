@@ -1,140 +1,130 @@
 # Kopi Krasand - Coffee Shop Management System
 
-## Original Problem Statement
-Build an interconnected system of applications for a coffee shop with:
-1. **Menu Order App** (Customer) - Reserve tables, order for dine-in/delivery/to-go, payment options
-2. **Order Request App** (Kitchen) - Receive orders, update progress
-3. **POS Dashboard** (Cashier) - Process payments, generate receipts
-4. **Inventory Management App** (Storage) - Track ingredients, COGS data
+## System Blueprint
 
-## Tech Stack
-- **Backend**: FastAPI (Python 3)
-- **Frontend**: React with TailwindCSS
-- **Database**: MongoDB
-- **Authentication**: JWT
+### Applications/Dashboards (7 Total)
 
-## User Roles & Access (6 Roles)
+| App | Route | User Role | Purpose |
+|-----|-------|-----------|---------|
+| **Customer App** | `/` | Public | Menu browsing, ordering, membership discounts |
+| **Admin Dashboard** | `/admin` | Admin | User management, loyalty programs, statistics |
+| **CMS Dashboard** | `/cms` | Admin | Product & category management, content editing |
+| **Kitchen Dashboard** | `/kitchen` | Kitchen | Order display, status updates |
+| **POS Dashboard** | `/pos` | Cashier | Payment processing, receipts |
+| **Waiter Dashboard** | `/waiter` | Waiter | Order status, table management |
+| **Storage Dashboard** | `/storage` | Storage | Inventory, ingredients, COGS |
 
-| Role | Route | Access Level |
-|------|-------|--------------|
-| Customer | `/` | Public - ordering, membership |
-| Cashier | `/pos` | Staff - payments, transactions |
-| Waiter | `/waiter` | Staff - order status, table management |
-| Kitchen | `/kitchen` | Staff - order preparation |
-| Storage | `/storage` | Staff - inventory, products, COGS |
-| Admin | `/admin` | Full - user management, loyalty programs |
+### Technology Stack
 
-## Security Model
-- **Customers**: Self-register at `/login` with optional membership
-- **Staff (all roles)**: Created ONLY by Admin via Admin Dashboard
-- **Role-based access control** enforced on all protected routes
+**Frontend:**
+- React 18.x
+- TailwindCSS 3.4.x
+- Shadcn/UI Components
+- React Router 6.x
+- Axios (HTTP client)
+- Lucide React (icons)
 
-## Implemented Features
+**Backend:**
+- Python 3.11+
+- FastAPI 0.110.x
+- Uvicorn (ASGI server)
+- Motor/PyMongo (MongoDB driver)
+- Pydantic 2.9.x (validation)
+- Python-Jose (JWT)
+- Passlib/bcrypt (passwords)
 
-### Customer App (`/`)
-- [x] Browse menu (beverages & food)
-- [x] Add to cart with quantity controls
-- [x] Place orders (dine-in, delivery, to-go)
-- [x] Customer registration with membership option
-- [x] View own membership benefits
-- [x] **Automatic discount at checkout** (NEW)
-- [x] **Discount preview in cart** (NEW)
-- [x] **Gold Member badge in header** (NEW)
+**Database:**
+- MongoDB Atlas (cloud)
 
-### Automatic Discount Feature (NEW)
-When a customer with active membership places an order:
-1. System checks customer's active membership
-2. Gets discount benefits (food %, beverage %)
-3. Calculates discounts based on item categories
-4. Applies discount to order total automatically
-5. Shows breakdown: subtotal, discounts, final amount
+**Deployment:**
+- Docker & Docker Compose
+- Nginx (reverse proxy)
 
-**Example:**
-- Gold Member with 15% food, 10% beverage discount
-- Order: 3x Espresso ($3.50 each = $10.50 beverages)
-- Discount: 10% off beverages = -$1.05
-- Final: $9.45
+### Key Features
 
-### Kitchen Dashboard (`/kitchen`)
-- [x] View active orders
-- [x] Update order status (pending → preparing → ready)
-- [x] Real-time refresh (5s interval)
+✅ **Customer Ordering**
+- Menu browsing by category
+- Cart with quantity controls
+- Multiple order types (dine-in, delivery, to-go)
+- Automatic membership discount at checkout
 
-### POS Dashboard (`/pos`)
-- [x] View all orders
-- [x] Process payments (cash, online, QR)
-- [x] Generate receipts
-- [x] Transaction history
+✅ **Content Management (CMS)**
+- Product CRUD with image upload
+- Category management
+- Menu sorting/ordering
+- Enable/disable products
 
-### Waiter Dashboard (`/waiter`)
-- [x] View order status
-- [x] Table management (seat guests, reserve, clear)
-- [x] Ready orders highlighted
+✅ **Admin Panel**
+- User management (all roles)
+- Loyalty program creation
+- Membership assignment
+- Revenue & statistics dashboard
 
-### Storage Dashboard (`/storage`)
-- [x] Ingredients management
-- [x] Products management with recipes
-- [x] COGS tracking
-- [x] Table/QR code management
+✅ **Loyalty Program**
+- Duration options (days, months, years, lifetime)
+- Multiple benefit types (food %, beverage %, WiFi %, custom)
+- Automatic discount calculation
+- Group and individual programs
 
-### Admin Dashboard (`/admin`)
-- [x] User management (add, edit role, delete)
-- [x] System statistics
-- [x] Revenue tracking
-- [x] **Loyalty Programs** with full CRUD
-- [x] **Membership Management** - assign/cancel
-- [x] Programs: Days, Months, Years, Lifetime durations
+✅ **Kitchen/POS/Waiter**
+- Real-time order display
+- Status workflow (pending → preparing → ready → completed)
+- Payment processing
+- Table management with QR codes
 
-## Loyalty Program Feature
+### Credentials
 
-### Program Configuration
-- **Duration Types**: Days, Months, Years, Lifetime
-- **Program Types**: Individual or Group
-- **Benefits**: Food %, Beverage %, WiFi %, Custom
+**Admin:** admin@kopikrasand.com / Admin123!
 
-### Sample Programs
-1. **Gold Member** (Lifetime) - 15% food, 10% beverages, Free WiFi
-2. **Silver Club** (1 month) - 5% food, 5% beverages
+### Docker Deployment
 
-## API Endpoints
+```bash
+# Configure
+cp .env.example .env
+# Edit with MongoDB Atlas credentials
 
-### Auth
-- `POST /api/auth/register` - Customer registration only
-- `POST /api/auth/login` - All users
+# Run
+docker-compose up -d --build
 
-### Orders (with automatic discount)
-- `POST /api/orders` - Create order with auto-discount
-- `POST /api/orders/preview-discount` - Preview discount before checkout
-- `GET /api/orders` - List orders (includes discount_info)
+# Access
+http://localhost        # Frontend
+http://localhost:8001/docs  # API Docs
+```
 
-### Admin - Loyalty Programs
-- `GET, POST, PUT, DELETE /api/admin/programs`
-- `POST /api/admin/memberships` - Assign membership
-- `DELETE /api/admin/memberships/{id}` - Cancel membership
+### Project Files
 
-### Customer
-- `GET /api/my/membership` - View own memberships
+```
+/app/
+├── backend/
+│   ├── server.py          # FastAPI (all routes)
+│   ├── requirements.txt   # Python deps
+│   ├── Dockerfile
+│   └── .env.production    # Atlas template
+├── frontend/
+│   ├── src/pages/         # 8 page components
+│   ├── public/images/     # Logo (local)
+│   ├── Dockerfile
+│   └── nginx.conf
+├── docker-compose.yml
+├── .env.example
+├── README.md
+└── ARCHITECTURE.md        # Full blueprint
+```
 
-## Database Collections
-- `users`, `products`, `orders`, `tables`
-- `ingredients`, `cogs`, `transactions`
-- `loyalty_programs`, `customer_memberships`
+### Next Steps
 
-## Test Results
-- **Backend**: 14/14 discount tests passed (100%)
-- **Frontend**: All discount UI features working
+To save to GitHub:
+1. Use **"Save to Github"** button in chat
+2. Creates new repository with all code
+3. Configure MongoDB Atlas credentials
+4. Deploy with Docker
 
-## Credentials
-- **Admin**: admin@kopikrasand.com / Admin123!
-- **Test Member**: newcustomer@test.com / Test123! (Gold Member)
+### Environment Variables Required
 
-## Upcoming Features (Backlog)
-1. GPS tracking for to-go orders
-2. Table reservation system
-3. Payment provider integration (Stripe)
-4. Member points/rewards accumulation
-5. Receipt includes discount breakdown
-
-## Branding
-- Logo: Kopi Krasand
-- Colors: Brown (#5A3A2A), Cream (#F5EEDC), Gold (#D9A54C), Green (#4A7A5E)
+```env
+MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/
+DB_NAME=kopi_krasand
+SECRET_KEY=your-32-char-secret
+CORS_ORIGINS=*
+REACT_APP_BACKEND_URL=http://localhost
+```
