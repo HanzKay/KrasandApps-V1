@@ -107,6 +107,7 @@ const CustomerApp = () => {
   
   const [searchParams] = useSearchParams();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   // Initialize app - fetch products on mount
