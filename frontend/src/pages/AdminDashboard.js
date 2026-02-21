@@ -31,6 +31,7 @@ const AdminDashboard = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [editingProgram, setEditingProgram] = useState(null);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [activeTab, setActiveTab] = useState('users');
   const { user, logout } = useAuth();
 
   const [userForm, setUserForm] = useState({
