@@ -88,13 +88,13 @@ const POSDashboard = () => {
           ${order.items.map(item => `
             <div class="item">
               <span>${item.quantity}x ${item.product_name}</span>
-              <span>$${(item.price * item.quantity).toFixed(2)}</span>
+              <span>${currencySymbol}${(item.price * item.quantity).toFixed(2)}</span>
             </div>
           `).join('')}
           <div class="total">
             <div class="item">
               <span>TOTAL:</span>
-              <span>$${order.total_amount.toFixed(2)}</span>
+              <span>${currencySymbol}${order.total_amount.toFixed(2)}</span>
             </div>
             <div class="item">
               <span>Payment:</span>
