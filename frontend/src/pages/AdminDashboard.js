@@ -302,7 +302,10 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </Card>
-            <Card className="bg-[#5A3A2A] p-4 text-white">
+            <Card 
+              className="bg-[#5A3A2A] p-4 text-white cursor-pointer hover:border-[#D9A54C] transition-all"
+              onClick={() => setActiveTab('orders')}
+            >
               <div className="flex items-center gap-3">
                 <ShoppingBag className="w-8 h-8 text-[#D9A54C]" />
                 <div>
