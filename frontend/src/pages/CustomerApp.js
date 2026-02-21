@@ -71,6 +71,7 @@ const CustomerApp = () => {
   const [myOrders, setMyOrders] = useState([]);
   const [membership, setMembership] = useState(null);
   const [discountPreview, setDiscountPreview] = useState(null);
+  const [currencySymbol, setCurrencySymbol] = useState('Rp');
   
   // State for UI
   const [showCart, setShowCart] = useState(false);
@@ -96,6 +97,11 @@ const CustomerApp = () => {
     orders: null,
     membership: null,
   });
+
+  // Currency formatter
+  const formatPrice = (price) => {
+    return `${currencySymbol}${price?.toFixed(2) || '0.00'}`;
+  };
   
   const [searchParams] = useSearchParams();
   const { user, logout } = useAuth();
