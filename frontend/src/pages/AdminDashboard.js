@@ -428,6 +428,73 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
 
+          {/* Orders Tab */}
+          <TabsContent value="orders" className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-[#F5EEDC]">All Orders ({orders.length})</h2>
+            </div>
+
+            {orders.length === 0 ? (
+              <div className="text-center py-12 text-[#F5EEDC]/60">
+                <ClipboardList className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>No orders yet</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {orders.map((order) => (
+                  <Card 
+                    key={order.id} 
+                    className="bg-[#5A3A2A] p-4 border-[#6b4a3a] cursor-pointer hover:border-[#D9A54C] transition-all"
+                    onClick={() => viewOrderDetails(order)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-lg bg-[#D9A54C]/20 flex items-center justify-center">
+                          <ShoppingBag className="w-6 h-6 text-[#D9A54C]" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-[#F5EEDC]">
+                            Order #{order.order_number}
+                          </h3>
+                          <p className="text-sm text-[#F5EEDC]/60">
+                            {order.customer_name || 'Guest'} • {order.order_type}
+                          </p>
+                          <p className="text-xs text-[#F5EEDC]/40">
+                            {new Date(order.created_at).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className="text-lg font-bold text-[#D9A54C]">
+                            ${order.total_amount?.toFixed(2) || '0.00'}
+                          </p>
+                          <p className="text-xs text-[#F5EEDC]/60">
+                            {order.items?.length || 0} items
+                          </p>
+                        </div>
+                        <Badge className={`${getStatusColor(order.status)} text-white`}>
+                          {order.status}
+                        </Badge>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-[#D9A54C] text-[#D9A54C] hover:bg-[#D9A54C]/10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            viewOrderDetails(order);
+                          }}
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
           {/* Programs Tab */}
           <TabsContent value="programs" className="space-y-4">
             <div className="flex justify-between items-center">
