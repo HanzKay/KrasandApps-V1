@@ -30,7 +30,9 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import QRScanner from '../components/QRScanner';
+import LanguageToggle from '../components/LanguageToggle';
 
 // In production (Docker), use relative /api path - nginx proxies to backend
 const getApiUrl = () => {
