@@ -332,7 +332,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <Tabs defaultValue="users" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-[#5A3A2A] border border-[#6b4a3a]">
             <TabsTrigger value="users" data-testid="admin-users-tab" className="data-[state=active]:bg-[#D9A54C]">
               <Users className="w-4 h-4 mr-2" />
