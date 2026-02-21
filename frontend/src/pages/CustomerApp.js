@@ -137,11 +137,25 @@ const CustomerApp = () => {
   }, [cart, user]);
 
   // API Functions with error handling per section
+  const fetchSettings = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/settings`, { timeout: 5000 });
+      if (response.data?.currency_symbol) {
+        setCurrencySymbol(response.data.currency_symbol);
+      }
+    } catch (error) {
+      console.log('Using default currency');
+    }
+  };
+
   const fetchProducts = async () => {
     setLoadingStates(prev => ({ ...prev, products: true }));
     setErrorStates(prev => ({ ...prev, products: null }));
     
     try {
+      // Fetch settings along with products
+      await fetchSettings();
+      
       const response = await axios.get(`${API_URL}/products`, { timeout: 10000 });
       // Handle both array response and object with products property
       const data = response.data;
