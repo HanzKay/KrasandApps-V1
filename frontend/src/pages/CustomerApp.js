@@ -137,7 +137,10 @@ const CustomerApp = () => {
     
     try {
       const response = await axios.get(`${API_URL}/products`, { timeout: 10000 });
-      setProducts(response.data || []);
+      // Handle both array response and object with products property
+      const data = response.data;
+      const productsArray = Array.isArray(data) ? data : (data?.products || []);
+      setProducts(productsArray);
     } catch (error) {
       console.error('Failed to load products:', error);
       setErrorStates(prev => ({ 
