@@ -337,6 +337,10 @@ const AdminDashboard = () => {
               <Users className="w-4 h-4 mr-2" />
               Users
             </TabsTrigger>
+            <TabsTrigger value="orders" data-testid="admin-orders-tab" className="data-[state=active]:bg-[#D9A54C]">
+              <ClipboardList className="w-4 h-4 mr-2" />
+              Orders
+            </TabsTrigger>
             <TabsTrigger value="programs" data-testid="admin-programs-tab" className="data-[state=active]:bg-[#D9A54C]">
               <Crown className="w-4 h-4 mr-2" />
               Loyalty Programs
