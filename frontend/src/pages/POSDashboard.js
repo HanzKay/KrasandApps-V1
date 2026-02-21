@@ -231,7 +231,7 @@ const POSDashboard = () => {
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <div className="text-2xl font-bold font-mono text-[#FF7F50]">
-                        ${order.total_amount.toFixed(2)}
+                        {formatPrice(order.total_amount)}
                       </div>
                       {order.payment_method && (
                         <div className="text-xs text-[#F5EEDC]/60">{order.payment_method}</div>
