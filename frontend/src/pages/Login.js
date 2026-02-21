@@ -121,18 +121,15 @@ const Login = () => {
                   disabled={loading}
                 >
                   <LogIn className="w-4 h-4 mr-2" />
-                  {loading ? 'Logging in...' : 'Login'}
+                  {loading ? t('loading') : t('login')}
                 </Button>
               </form>
-              <p className="text-xs text-center text-muted-foreground mt-4">
-                Staff members: Please contact admin for account access
-              </p>
             </TabsContent>
 
             <TabsContent value="register">
               <form onSubmit={handleRegister} className="space-y-4">
                 <div>
-                  <Label htmlFor="reg-name">Your Name</Label>
+                  <Label htmlFor="reg-name">{t('name')}</Label>
                   <Input
                     id="reg-name"
                     type="text"
@@ -145,7 +142,7 @@ const Login = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="reg-email">Email</Label>
+                  <Label htmlFor="reg-email">{t('email')}</Label>
                   <Input
                     id="reg-email"
                     type="email"
