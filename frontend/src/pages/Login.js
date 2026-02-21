@@ -62,6 +62,11 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-[#F5EEDC] flex items-center justify-center p-6">
+      {/* Language Toggle - Top Right */}
+      <div className="absolute top-4 right-4">
+        <LanguageToggle className="bg-white/80 hover:bg-white" />
+      </div>
+      
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center mb-4">
@@ -71,20 +76,20 @@ const Login = () => {
               className="h-20"
             />
           </div>
-          <p className="text-muted-foreground">Welcome to Kopi Krasand</p>
+          <p className="text-muted-foreground">{t('welcomeBack')}</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg border border-secondary p-8">
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login" data-testid="login-tab">Login</TabsTrigger>
-              <TabsTrigger value="register" data-testid="register-tab">Join Us</TabsTrigger>
+              <TabsTrigger value="login" data-testid="login-tab">{t('login')}</TabsTrigger>
+              <TabsTrigger value="register" data-testid="register-tab">{t('register')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('email')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -97,7 +102,7 @@ const Login = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{t('password')}</Label>
                   <Input
                     id="password"
                     type="password"
