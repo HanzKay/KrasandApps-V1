@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { LogIn, UserPlus, Crown } from 'lucide-react';
+import LanguageToggle from '../components/LanguageToggle';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +17,7 @@ const Login = () => {
   const [isMember, setIsMember] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login, register } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const redirectByRole = (userRole) => {
@@ -33,10 +36,10 @@ const Login = () => {
     setLoading(true);
     try {
       const user = await login(email, password);
-      toast.success('Welcome back!');
+      toast.success(t('welcomeBack'));
       navigate(redirectByRole(user.role));
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Login failed');
+      toast.error(error.response?.data?.detail || t('loginFailed'));
     } finally {
       setLoading(false);
     }
