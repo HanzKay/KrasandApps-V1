@@ -1208,6 +1208,48 @@ async def get_my_membership(current_user: User = Depends(get_current_user)):
     
     return memberships
 
+# Settings Model
+class Settings(BaseModel):
+    currency_symbol: str = "Rp"
+    currency_code: str = "IDR"
+    
+class SettingsUpdate(BaseModel):
+    currency_symbol: Optional[str] = None
+    currency_code: Optional[str] = None
+
+# Settings Endpoints
+@api_router.get("/settings")
+async def get_settings():
+    """Get app settings (public)"""
+    settings = await db.settings.find_one({"id": "app_settings"}, {"_id": 0})
+    if not settings:
+        # Return default settings
+        return {
+            "id": "app_settings",
+            "currency_symbol": "Rp",
+            "currency_code": "IDR"
+        }
+    return settings
+
+@api_router.put("/settings")
+async def update_settings(settings: SettingsUpdate, current_user: User = Depends(get_current_user)):
+    """Update app settings (admin only)"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    update_data = {k: v for k, v in settings.model_dump().items() if v is not None}
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    result = await db.settings.update_one(
+        {"id": "app_settings"},
+        {"$set": update_data},
+        upsert=True
+    )
+    
+    updated = await db.settings.find_one({"id": "app_settings"}, {"_id": 0})
+    return updated
+
 @api_router.get("/")
 async def root():
     return {"message": "Coffee Shop Management API"}
