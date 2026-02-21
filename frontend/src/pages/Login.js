@@ -155,7 +155,7 @@ const Login = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="reg-password">Password</Label>
+                  <Label htmlFor="reg-password">{t('password')}</Label>
                   <Input
                     id="reg-password"
                     type="password"
@@ -181,10 +181,10 @@ const Login = () => {
                     <div>
                       <div className="flex items-center gap-2">
                         <Crown className="w-4 h-4 text-[#D9A54C]" />
-                        <span className="font-semibold text-[#5A3A2A]">Join as Member</span>
+                        <span className="font-semibold text-[#5A3A2A]">{t('joinMembership')}</span>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Get exclusive discounts, earn points, and receive special offers!
+                        {t('memberBenefits')}
                       </p>
                     </div>
                   </label>
@@ -197,7 +197,7 @@ const Login = () => {
                   disabled={loading}
                 >
                   <UserPlus className="w-4 h-4 mr-2" />
-                  {loading ? 'Creating account...' : (isMember ? 'Join as Member' : 'Create Account')}
+                  {loading ? t('loading') : t('register')}
                 </Button>
               </form>
             </TabsContent>
