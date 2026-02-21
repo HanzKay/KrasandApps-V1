@@ -618,7 +618,7 @@ const CustomerApp = () => {
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-xl font-bold text-[#D9A54C]">
-                      ${product.price?.toFixed(2)}
+                      {formatPrice(product.price)}
                     </span>
                     <Button
                       onClick={() => addToCart(product)}
