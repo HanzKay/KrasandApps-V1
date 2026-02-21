@@ -352,6 +352,10 @@ const CMSDashboard = () => {
               <Grid className="w-4 h-4 mr-2" />
               Categories
             </TabsTrigger>
+            <TabsTrigger value="settings" data-testid="cms-settings-tab" className="data-[state=active]:bg-[#D9A54C]">
+              <DollarSign className="w-4 h-4 mr-2" />
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           {/* Products Tab */}
