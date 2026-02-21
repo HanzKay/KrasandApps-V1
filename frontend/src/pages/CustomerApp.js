@@ -901,7 +901,7 @@ const CustomerApp = () => {
       <Dialog open={showOrders} onOpenChange={setShowOrders}>
         <DialogContent className="sm:max-w-lg max-h-[80vh] overflow-y-auto" data-testid="orders-dialog">
           <DialogHeader>
-            <DialogTitle>My Orders</DialogTitle>
+            <DialogTitle>{t('myOrders')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             {loadingStates.orders ? (
