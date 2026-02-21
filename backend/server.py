@@ -35,6 +35,28 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting Coffee Shop Management API")
+    
+    # Create default admin user if none exists
+    try:
+        admin_exists = await db.users.find_one({"role": "admin"})
+        if not admin_exists:
+            hashed_password = pwd_context.hash("Admin123!")
+            admin_user = {
+                "id": str(uuid.uuid4()),
+                "email": "admin@kopikrasand.com",
+                "hashed_password": hashed_password,
+                "name": "Admin",
+                "role": "admin",
+                "is_member": False,
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.users.insert_one(admin_user)
+            logger.info("Default admin user created: admin@kopikrasand.com / Admin123!")
+        else:
+            logger.info("Admin user already exists")
+    except Exception as e:
+        logger.error(f"Error creating default admin: {e}")
+    
     yield
     # Shutdown
     client.close()
