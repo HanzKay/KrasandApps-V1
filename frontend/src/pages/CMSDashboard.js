@@ -26,8 +26,21 @@ const CMSDashboard = () => {
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [settings, setSettings] = useState({ currency_symbol: 'Rp', currency_code: 'IDR' });
+  const [savingSettings, setSavingSettings] = useState(false);
   const { user, logout } = useAuth();
   const fileInputRef = useRef(null);
+
+  const currencyOptions = [
+    { symbol: '$', code: 'USD', name: 'US Dollar' },
+    { symbol: 'Rp', code: 'IDR', name: 'Indonesian Rupiah' },
+    { symbol: '€', code: 'EUR', name: 'Euro' },
+    { symbol: '¥', code: 'JPY', name: 'Japanese Yen' },
+    { symbol: '£', code: 'GBP', name: 'British Pound' },
+    { symbol: '₩', code: 'KRW', name: 'Korean Won' },
+    { symbol: 'RM', code: 'MYR', name: 'Malaysian Ringgit' },
+    { symbol: 'S$', code: 'SGD', name: 'Singapore Dollar' },
+  ];
 
   const defaultProductForm = {
     name: '',
