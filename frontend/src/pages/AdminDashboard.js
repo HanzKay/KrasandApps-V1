@@ -925,6 +925,78 @@ const AdminDashboard = () => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Order Details Dialog */}
+        <Dialog open={showOrderDetails} onOpenChange={setShowOrderDetails}>
+          <DialogContent className="bg-[#5A3A2A] text-white border-[#6b4a3a] max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Order Details</DialogTitle>
+            </DialogHeader>
+            {selectedOrder && (
+              <div className="space-y-4">
+                <div className="bg-[#1A1C1A] rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[#F5EEDC]/60">Order Number</span>
+                    <span className="font-mono font-bold text-[#D9A54C]">#{selectedOrder.order_number}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[#F5EEDC]/60">Status</span>
+                    <Badge className={`${getStatusColor(selectedOrder.status)} text-white`}>
+                      {selectedOrder.status}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[#F5EEDC]/60">Customer</span>
+                    <span>{selectedOrder.customer_name || 'Guest'}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[#F5EEDC]/60">Order Type</span>
+                    <span className="capitalize">{selectedOrder.order_type}</span>
+                  </div>
+                  {selectedOrder.table_number && (
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-[#F5EEDC]/60">Table</span>
+                      <span>{selectedOrder.table_number}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#F5EEDC]/60">Date</span>
+                    <span>{new Date(selectedOrder.created_at).toLocaleString()}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-2">Items</h4>
+                  <div className="space-y-2">
+                    {selectedOrder.items?.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-center bg-[#1A1C1A] p-3 rounded-lg">
+                        <div>
+                          <span className="font-medium">{item.quantity}x</span>
+                          <span className="ml-2">{item.product_name}</span>
+                        </div>
+                        <span className="text-[#D9A54C]">${(item.price * item.quantity).toFixed(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {selectedOrder.notes && (
+                  <div>
+                    <h4 className="font-semibold mb-2">Notes</h4>
+                    <p className="text-[#F5EEDC]/70 bg-[#1A1C1A] p-3 rounded-lg">{selectedOrder.notes}</p>
+                  </div>
+                )}
+
+                <div className="border-t border-[#6b4a3a] pt-4">
+                  <div className="flex justify-between items-center text-xl font-bold">
+                    <span>Total</span>
+                    <span className="text-[#D9A54C]">${selectedOrder.total_amount?.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
