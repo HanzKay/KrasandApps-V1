@@ -56,21 +56,39 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [usersRes, statsRes, programsRes, membershipsRes] = await Promise.all([
+      const [usersRes, statsRes, programsRes, membershipsRes, ordersRes] = await Promise.all([
         api.get('/admin/users'),
         api.get('/admin/stats'),
         api.get('/admin/programs'),
         api.get('/admin/memberships?status=active'),
+        api.get('/orders'),
       ]);
       setUsers(usersRes.data);
       setStats(statsRes.data);
       setPrograms(programsRes.data);
       setMemberships(membershipsRes.data);
+      setOrders(ordersRes.data || []);
       setLoading(false);
     } catch (error) {
       toast.error('Failed to load admin data');
       setLoading(false);
     }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return 'bg-green-500';
+      case 'ready': return 'bg-blue-500';
+      case 'preparing': return 'bg-yellow-500';
+      case 'pending': return 'bg-orange-500';
+      case 'cancelled': return 'bg-red-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const viewOrderDetails = (order) => {
+    setSelectedOrder(order);
+    setShowOrderDetails(true);
   };
 
   const addUser = async () => {
