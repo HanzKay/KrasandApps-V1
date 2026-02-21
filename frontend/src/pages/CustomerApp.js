@@ -671,7 +671,7 @@ const CustomerApp = () => {
                     <div className="flex-1">
                       <h5 className="font-medium">{item.product_name}</h5>
                       <p className="text-sm text-muted-foreground">
-                        ${item.price.toFixed(2)} each
+                        {formatPrice(item.price)} each
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
