@@ -582,7 +582,7 @@ const CMSDashboard = () => {
                   />
                 </div>
                 <div>
-                  <Label>Price ($)</Label>
+                  <Label>Price ({settings.currency_symbol})</Label>
                   <Input
                     type="number"
                     step="0.01"
