@@ -362,12 +362,13 @@ const CustomerApp = () => {
   };
 
   // Filter products by category
+  const safeProducts = Array.isArray(products) ? products : [];
   const filteredProducts = category === 'all' 
-    ? products 
-    : products.filter((p) => p.category === category);
+    ? safeProducts 
+    : safeProducts.filter((p) => p.category === category);
 
   // Get unique categories from products
-  const categories = ['all', ...new Set(products.map((p) => p.category))];
+  const categories = ['all', ...new Set(safeProducts.map((p) => p.category).filter(Boolean))];
 
   return (
     <div className="min-h-screen bg-[#F5EEDC]">
