@@ -525,10 +525,13 @@ const CMSDashboard = () => {
 
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
+            {/* Currency Settings */}
             <Card className="bg-[#5A3A2A] p-6">
-              <h3 className="text-lg font-semibold text-[#F5EEDC] mb-4">Currency Settings</h3>
+              <h3 className="text-lg font-semibold text-[#F5EEDC] mb-4">{t('currencySettings')}</h3>
               <p className="text-[#F5EEDC]/70 text-sm mb-6">
-                Select the currency to display prices throughout the application.
+                {language === 'id' 
+                  ? 'Pilih mata uang untuk menampilkan harga di seluruh aplikasi.' 
+                  : 'Select the currency to display prices throughout the application.'}
               </p>
               
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
@@ -552,7 +555,7 @@ const CMSDashboard = () => {
               <div className="flex items-center gap-4 p-4 bg-[#1A1C1A] rounded-lg mb-6">
                 <DollarSign className="w-8 h-8 text-[#D9A54C]" />
                 <div>
-                  <p className="text-[#F5EEDC]/70 text-sm">Current Setting</p>
+                  <p className="text-[#F5EEDC]/70 text-sm">{language === 'id' ? 'Pengaturan Saat Ini' : 'Current Setting'}</p>
                   <p className="text-[#F5EEDC] text-lg font-semibold">
                     {settings.currency_symbol} ({settings.currency_code})
                   </p>
@@ -565,8 +568,48 @@ const CMSDashboard = () => {
                 className="bg-[#D9A54C] hover:bg-[#c99540] text-[#1A1C1A]"
               >
                 <Save className="w-4 h-4 mr-2" />
-                {savingSettings ? 'Saving...' : 'Save Currency Settings'}
+                {savingSettings ? t('loading') : t('save')}
               </Button>
+            </Card>
+
+            {/* Language Settings */}
+            <Card className="bg-[#5A3A2A] p-6">
+              <h3 className="text-lg font-semibold text-[#F5EEDC] mb-4">{t('languageSettings')}</h3>
+              <p className="text-[#F5EEDC]/70 text-sm mb-6">
+                {language === 'id' 
+                  ? 'Pilih bahasa default untuk aplikasi.' 
+                  : 'Select the default language for the application.'}
+              </p>
+              
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                {languageOptions.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code)}
+                    className={`p-4 rounded-lg border-2 transition-all flex items-center gap-3 ${
+                      language === lang.code
+                        ? 'border-[#D9A54C] bg-[#D9A54C]/20'
+                        : 'border-[#6b4a3a] hover:border-[#D9A54C]/50'
+                    }`}
+                  >
+                    <span className="text-2xl">{lang.flag}</span>
+                    <div className="text-left">
+                      <div className="text-lg font-bold text-[#F5EEDC]">{lang.code.toUpperCase()}</div>
+                      <div className="text-xs text-[#F5EEDC]/70">{lang.name}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-4 p-4 bg-[#1A1C1A] rounded-lg">
+                <Globe className="w-8 h-8 text-[#D9A54C]" />
+                <div>
+                  <p className="text-[#F5EEDC]/70 text-sm">{language === 'id' ? 'Bahasa Aktif' : 'Active Language'}</p>
+                  <p className="text-[#F5EEDC] text-lg font-semibold">
+                    {languageOptions.find(l => l.code === language)?.name || 'Bahasa Indonesia'}
+                  </p>
+                </div>
+              </div>
             </Card>
           </TabsContent>
         </Tabs>
