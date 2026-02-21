@@ -793,7 +793,7 @@ const CustomerApp = () => {
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Email</label>
+              <label className="text-sm font-medium mb-1 block">{t('email')}</label>
               <Input
                 type="email"
                 value={customerEmail}
@@ -805,7 +805,7 @@ const CustomerApp = () => {
             
             {orderType === 'to-go' && (
               <div>
-                <label className="text-sm font-medium mb-1 block">Share Location (optional)</label>
+                <label className="text-sm font-medium mb-1 block">Share Location</label>
                 <Button
                   onClick={getLocation}
                   variant="outline"
@@ -819,7 +819,7 @@ const CustomerApp = () => {
             )}
 
             <div>
-              <label className="text-sm font-medium mb-1 block">Special Instructions</label>
+              <label className="text-sm font-medium mb-1 block">{t('notes')}</label>
               <Input
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
