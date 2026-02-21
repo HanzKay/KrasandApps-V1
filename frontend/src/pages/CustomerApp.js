@@ -348,7 +348,7 @@ const CustomerApp = () => {
       // Show discount applied message if applicable
       if (response.data.discount_info && response.data.discount_info.total_discount > 0) {
         toast.success(
-          `Order placed! You saved $${response.data.discount_info.total_discount.toFixed(2)} with your ${response.data.discount_info.program_name} membership!`,
+          `Order placed! You saved ${formatPrice(response.data.discount_info.total_discount)} with your ${response.data.discount_info.program_name} membership!`,
           { duration: 5000 }
         );
       } else {
