@@ -282,7 +282,7 @@ const POSDashboard = () => {
                 <p className="text-sm text-[#F5EEDC]/60 mb-1">Order Number</p>
                 <p className="font-mono font-bold text-lg">{selectedOrder.order_number}</p>
                 <p className="text-3xl font-bold font-mono text-[#FF7F50] mt-3">
-                  ${selectedOrder.total_amount.toFixed(2)}
+                  {formatPrice(selectedOrder.total_amount)}
                 </p>
               </div>
               <div>
