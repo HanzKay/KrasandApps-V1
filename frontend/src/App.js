@@ -9,6 +9,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import CMSDashboard from './pages/CMSDashboard';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 
 const PrivateRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -34,10 +35,11 @@ const PrivateRoute = ({ children, allowedRoles }) => {
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <div className="App">
-          <Routes>
+    <LanguageProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <div className="App">
+            <Routes>
             {/* Customer App - Public Access */}
             <Route path="/" element={<CustomerApp />} />
             <Route path="/login" element={<Login />} />
