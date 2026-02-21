@@ -73,10 +73,11 @@ const CMSDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [productsRes, ingredientsRes, categoriesRes] = await Promise.all([
+      const [productsRes, ingredientsRes, categoriesRes, settingsRes] = await Promise.all([
         api.get('/products?include_unavailable=true'),
         api.get('/ingredients').catch(() => ({ data: [] })),
-        api.get('/categories').catch(() => ({ data: [] }))
+        api.get('/categories').catch(() => ({ data: [] })),
+        api.get('/settings').catch(() => ({ data: { currency_symbol: 'Rp', currency_code: 'IDR' } }))
       ]);
       
       setProducts(productsRes.data || []);
@@ -85,10 +86,30 @@ const CMSDashboard = () => {
         { id: 'beverage', name: 'Beverages', slug: 'beverage', sort_order: 1 },
         { id: 'food', name: 'Food', slug: 'food', sort_order: 2 }
       ]);
+      setSettings(settingsRes.data || { currency_symbol: 'Rp', currency_code: 'IDR' });
       setLoading(false);
     } catch (error) {
       toast.error('Failed to load data');
       setLoading(false);
+    }
+  };
+
+  const saveSettings = async () => {
+    setSavingSettings(true);
+    try {
+      await api.put('/settings', settings);
+      toast.success('Currency settings saved');
+    } catch (error) {
+      toast.error('Failed to save settings');
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
+  const handleCurrencyChange = (code) => {
+    const selected = currencyOptions.find(c => c.code === code);
+    if (selected) {
+      setSettings({ currency_symbol: selected.symbol, currency_code: selected.code });
     }
   };
 
