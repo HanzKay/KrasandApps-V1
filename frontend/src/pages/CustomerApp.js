@@ -413,6 +413,7 @@ const CustomerApp = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <LanguageToggle className="text-white border-white/30 hover:bg-white/10" />
             {user ? (
               <>
                 {membership && (
@@ -428,7 +429,7 @@ const CustomerApp = () => {
                   data-testid="my-orders-button"
                   className="text-white hover:bg-white/10"
                 >
-                  My Orders
+                  {t('myOrders')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -449,7 +450,7 @@ const CustomerApp = () => {
                 className="text-white hover:bg-white/10"
               >
                 <User className="w-4 h-4 mr-2" />
-                Login
+                {t('login')}
               </Button>
             )}
             <Button
