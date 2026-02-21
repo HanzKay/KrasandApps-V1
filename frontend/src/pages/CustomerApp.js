@@ -950,7 +950,7 @@ const CustomerApp = () => {
                   <div className="flex justify-between items-center mt-2 pt-2 border-t">
                     <span className="text-sm text-muted-foreground">{order.order_type}</span>
                     <span className="font-bold text-[#D9A54C]">
-                      ${order.total_amount?.toFixed(2)}
+                      {formatPrice(order.total_amount)}
                     </span>
                   </div>
                 </div>
