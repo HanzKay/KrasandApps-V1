@@ -16,13 +16,28 @@ const POSDashboard = () => {
   const [showPayment, setShowPayment] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [loading, setLoading] = useState(true);
+  const [currencySymbol, setCurrencySymbol] = useState('Rp');
   const { user, logout } = useAuth();
 
+  const formatPrice = (price) => `${currencySymbol}${price?.toFixed(2) || '0.00'}`;
+
   useEffect(() => {
+    fetchSettings();
     fetchOrders();
     const interval = setInterval(fetchOrders, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const response = await api.get('/settings');
+      if (response.data?.currency_symbol) {
+        setCurrencySymbol(response.data.currency_symbol);
+      }
+    } catch (error) {
+      console.log('Using default currency');
+    }
+  };
 
   const fetchOrders = async () => {
     try {
