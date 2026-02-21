@@ -12,18 +12,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/
 import { 
   LogOut, Users, ShoppingBag, LayoutGrid, 
   Plus, Trash2, Edit, DollarSign, Clock, CheckCircle,
-  Crown, Gift, Coffee, Wifi, Percent, Calendar, UserPlus
+  Crown, Gift, Coffee, Wifi, Percent, Calendar, UserPlus,
+  ClipboardList, Eye
 } from 'lucide-react';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [programs, setPrograms] = useState([]);
   const [memberships, setMemberships] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAddUser, setShowAddUser] = useState(false);
   const [showAddProgram, setShowAddProgram] = useState(false);
   const [showAssignMembership, setShowAssignMembership] = useState(false);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
   const [editingProgram, setEditingProgram] = useState(null);
   const [selectedUsers, setSelectedUsers] = useState([]);
