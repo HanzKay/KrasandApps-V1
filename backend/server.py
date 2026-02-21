@@ -332,7 +332,7 @@ async def register(user_data: CustomerRegister):
 @api_router.post("/auth/login", response_model=Token)
 async def login(credentials: UserLogin):
     user = await db.users.find_one({"email": credentials.email})
-    if not user or not verify_password(credentials.password, user["password"]):
+    if not user or not verify_password(credentials.password, user["hashed_password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     user_obj = User(
