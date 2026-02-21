@@ -854,12 +854,12 @@ const CustomerApp = () => {
                 </div>
                 {discountPreview && discountPreview.total_discount > 0 && (
                   <div className="flex justify-between text-sm text-[#4A7A5E]">
-                    <span>Discount:</span>
+                    <span>{t('discount')}:</span>
                     <span className="font-mono">-{formatPrice(discountPreview.total_discount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="font-semibold">Total:</span>
+                  <span className="font-semibold">{t('total')}:</span>
                   <span className="text-xl font-bold font-mono text-[#D9A54C]">
                     {formatPrice(discountPreview ? discountPreview.final_amount : getTotalAmount())}
                   </span>
@@ -872,7 +872,7 @@ const CustomerApp = () => {
               data-testid="place-order-button"
               className="w-full rounded-full bg-[#4A7A5E] hover:bg-[#3d6550] py-6"
             >
-              Place Order
+              {t('placeOrder')}
             </Button>
           </div>
         </DialogContent>
@@ -882,7 +882,7 @@ const CustomerApp = () => {
       <Dialog open={showScanner} onOpenChange={setShowScanner}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Scan Table QR Code</DialogTitle>
+            <DialogTitle>{t('scanQR')}</DialogTitle>
           </DialogHeader>
           <QRScanner
             onScan={(data) => {
