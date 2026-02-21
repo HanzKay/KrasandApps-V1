@@ -710,13 +710,13 @@ const CustomerApp = () => {
                         {discountPreview.discount_info.food_discount_amount > 0 && (
                           <div className="flex justify-between">
                             <span>Food ({discountPreview.discount_info.food_discount_percent}% off)</span>
-                            <span className="text-[#4A7A5E]">-${discountPreview.discount_info.food_discount_amount.toFixed(2)}</span>
+                            <span className="text-[#4A7A5E]">-{formatPrice(discountPreview.discount_info.food_discount_amount)}</span>
                           </div>
                         )}
                         {discountPreview.discount_info.beverage_discount_amount > 0 && (
                           <div className="flex justify-between">
                             <span>Beverages ({discountPreview.discount_info.beverage_discount_percent}% off)</span>
-                            <span className="text-[#4A7A5E]">-${discountPreview.discount_info.beverage_discount_amount.toFixed(2)}</span>
+                            <span className="text-[#4A7A5E]">-{formatPrice(discountPreview.discount_info.beverage_discount_amount)}</span>
                           </div>
                         )}
                       </div>
@@ -727,14 +727,14 @@ const CustomerApp = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center text-muted-foreground">
                       <span>Subtotal:</span>
-                      <span className="font-mono">${getTotalAmount().toFixed(2)}</span>
+                      <span className="font-mono">{formatPrice(getTotalAmount())}</span>
                     </div>
                     
                     {discountPreview && discountPreview.total_discount > 0 && (
                       <div className="flex justify-between items-center text-[#4A7A5E]">
                         <span>Discount:</span>
                         <span className="font-mono font-semibold" data-testid="discount-amount">
-                          -${discountPreview.total_discount.toFixed(2)}
+                          -{formatPrice(discountPreview.total_discount)}
                         </span>
                       </div>
                     )}
@@ -742,7 +742,7 @@ const CustomerApp = () => {
                     <div className="flex justify-between items-center border-t pt-2">
                       <span className="text-lg font-semibold">Total:</span>
                       <span className="text-2xl font-bold font-mono text-[#D9A54C]" data-testid="cart-total">
-                        ${(discountPreview ? discountPreview.final_amount : getTotalAmount()).toFixed(2)}
+                        {formatPrice(discountPreview ? discountPreview.final_amount : getTotalAmount())}
                       </span>
                     </div>
                   </div>
