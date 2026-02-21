@@ -730,13 +730,13 @@ const CustomerApp = () => {
                   {/* Pricing Summary */}
                   <div className="space-y-2">
                     <div className="flex justify-between items-center text-muted-foreground">
-                      <span>Subtotal:</span>
+                      <span>{t('subtotal')}:</span>
                       <span className="font-mono">{formatPrice(getTotalAmount())}</span>
                     </div>
                     
                     {discountPreview && discountPreview.total_discount > 0 && (
                       <div className="flex justify-between items-center text-[#4A7A5E]">
-                        <span>Discount:</span>
+                        <span>{t('discount')}:</span>
                         <span className="font-mono font-semibold" data-testid="discount-amount">
                           -{formatPrice(discountPreview.total_discount)}
                         </span>
@@ -744,7 +744,7 @@ const CustomerApp = () => {
                     )}
                     
                     <div className="flex justify-between items-center border-t pt-2">
-                      <span className="text-lg font-semibold">Total:</span>
+                      <span className="text-lg font-semibold">{t('total')}:</span>
                       <span className="text-2xl font-bold font-mono text-[#D9A54C]" data-testid="cart-total">
                         {formatPrice(discountPreview ? discountPreview.final_amount : getTotalAmount())}
                       </span>
@@ -756,7 +756,7 @@ const CustomerApp = () => {
                     <div className="bg-[#D9A54C]/10 border border-[#D9A54C] rounded-lg p-3 text-center">
                       <p className="text-sm text-[#5A3A2A]">
                         <Crown className="w-4 h-4 inline mr-1" />
-                        <span className="font-semibold">Login to get member discounts!</span>
+                        <span className="font-semibold">{t('joinMembership')}!</span>
                       </p>
                     </div>
                   )}
@@ -766,7 +766,7 @@ const CustomerApp = () => {
                     data-testid="checkout-button"
                     className="w-full rounded-full bg-[#D9A54C] hover:bg-[#c9944c] py-6"
                   >
-                    Proceed to Checkout
+                    {t('checkout')}
                   </Button>
                 </div>
               </>
