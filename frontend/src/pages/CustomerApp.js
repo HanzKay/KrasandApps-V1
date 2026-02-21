@@ -838,7 +838,7 @@ const CustomerApp = () => {
                     {discountPreview.discount_info.program_name} Member
                   </p>
                   <p className="text-sm text-[#4A7A5E]">
-                    You save: ${discountPreview.total_discount.toFixed(2)}
+                    You save: {formatPrice(discountPreview.total_discount)}
                   </p>
                 </div>
               )}
@@ -846,18 +846,18 @@ const CustomerApp = () => {
               <div className="border-t pt-2 mt-2 space-y-1">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal:</span>
-                  <span className="font-mono">${getTotalAmount().toFixed(2)}</span>
+                  <span className="font-mono">{formatPrice(getTotalAmount())}</span>
                 </div>
                 {discountPreview && discountPreview.total_discount > 0 && (
                   <div className="flex justify-between text-sm text-[#4A7A5E]">
                     <span>Discount:</span>
-                    <span className="font-mono">-${discountPreview.total_discount.toFixed(2)}</span>
+                    <span className="font-mono">-{formatPrice(discountPreview.total_discount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span className="font-semibold">Total:</span>
                   <span className="text-xl font-bold font-mono text-[#D9A54C]">
-                    ${(discountPreview ? discountPreview.final_amount : getTotalAmount()).toFixed(2)}
+                    {formatPrice(discountPreview ? discountPreview.final_amount : getTotalAmount())}
                   </span>
                 </div>
               </div>
