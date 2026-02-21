@@ -497,7 +497,7 @@ const CustomerApp = () => {
               }`}
             >
               <UtensilsCrossed className="w-4 h-4 mr-2" />
-              Dine-in
+              {t('dineIn')}
             </Button>
             <Button
               onClick={() => setOrderType('to-go')}
@@ -509,7 +509,7 @@ const CustomerApp = () => {
               }`}
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
-              To-Go
+              {t('takeaway')}
             </Button>
             <Button
               onClick={() => setOrderType('delivery')}
@@ -521,7 +521,7 @@ const CustomerApp = () => {
               }`}
             >
               <Truck className="w-4 h-4 mr-2" />
-              Delivery
+              {t('delivery')}
             </Button>
           </div>
 
@@ -530,7 +530,7 @@ const CustomerApp = () => {
             <div className="flex justify-center gap-3">
               {tableInfo ? (
                 <Badge className="bg-[#4A7A5E] text-white px-4 py-2">
-                  Table {tableInfo.table_number}
+                  {t('tableNumber')} {tableInfo.table_number}
                 </Badge>
               ) : (
                 <Button
@@ -539,7 +539,7 @@ const CustomerApp = () => {
                   className="border-white/30 text-white hover:bg-white/10"
                 >
                   <QrCode className="w-4 h-4 mr-2" />
-                  Scan Table QR
+                  {t('scanQR')}
                 </Button>
               )}
             </div>
