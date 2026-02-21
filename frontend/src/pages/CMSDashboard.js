@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { toast } from 'sonner';
 import api from '../utils/api';
 import { Button } from '../components/ui/button';
@@ -14,7 +15,7 @@ import { Switch } from '../components/ui/switch';
 import { 
   LogOut, Package, Coffee, Grid, Plus, Trash2, Edit, 
   Image, DollarSign, Tag, Save, Upload, Eye, EyeOff,
-  GripVertical, ChevronUp, ChevronDown
+  GripVertical, ChevronUp, ChevronDown, Globe
 } from 'lucide-react';
 
 const CMSDashboard = () => {
