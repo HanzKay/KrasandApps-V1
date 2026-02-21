@@ -30,6 +30,7 @@ const CMSDashboard = () => {
   const [settings, setSettings] = useState({ currency_symbol: 'Rp', currency_code: 'IDR' });
   const [savingSettings, setSavingSettings] = useState(false);
   const { user, logout } = useAuth();
+  const { language, setLanguage, t } = useLanguage();
   const fileInputRef = useRef(null);
 
   const currencyOptions = [
@@ -41,6 +42,11 @@ const CMSDashboard = () => {
     { symbol: '₩', code: 'KRW', name: 'Korean Won' },
     { symbol: 'RM', code: 'MYR', name: 'Malaysian Ringgit' },
     { symbol: 'S$', code: 'SGD', name: 'Singapore Dollar' },
+  ];
+
+  const languageOptions = [
+    { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
+    { code: 'en', name: 'English', flag: '🇬🇧' },
   ];
 
   const defaultProductForm = {
